@@ -10,8 +10,7 @@ public class UserStory {
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne
-    private Project project;
+    private UUID projectId;
 
     private String title;
 
@@ -31,12 +30,12 @@ public class UserStory {
         this.id = id;
     }
 
-    public Project getProject() {
-        return project;
+    public UUID getProjectId() {
+        return projectId;
     }
 
-    public void setProject(Project project) {
-        this.project = project;
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     public String getTitle() {

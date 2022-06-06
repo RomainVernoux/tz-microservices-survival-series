@@ -14,6 +14,8 @@ public class Project {
 
     private String name;
 
+    private Boolean applyWorkflows;
+
     @Embedded
     private AdministrativeInformation administrativeInformation;
 
@@ -31,6 +33,14 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getApplyWorkflows() {
+        return applyWorkflows;
+    }
+
+    public void setApplyWorkflows(Boolean applyWorkflows) {
+        this.applyWorkflows = applyWorkflows;
     }
 
     public AdministrativeInformation getAdministrativeInformation() {
