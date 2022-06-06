@@ -19,11 +19,11 @@ public class UserStoryController {
 
     @GetMapping
     public List<UserStory> getAllUserStories() {
-        return userStoryService.retrieveAllUserStories();
+        return userStoryService.getAllUserStories();
     }
 
     @PutMapping
-    public void saveUserStory(UserStory userStory) {
-        userStoryService.saveUserStory(userStory);
+    public void editUserStory(UserStory userStory) {
+        userStoryService.editUserStory(userStory);
     }
 }

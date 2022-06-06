@@ -1,10 +1,7 @@
 package com.zenika.survivalbackend.model;
 
 public enum UserStoryStatus {
-    SANDBOX,
-    READY,
+    TODO,
     IN_PROGRESS,
-    DONE,
-    CANCELLED,
-    DELETED
+    DONE
 }

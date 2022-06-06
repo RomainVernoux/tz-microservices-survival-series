@@ -8,6 +8,7 @@ import com.zenika.survivalbackend.repository.UserStoryRepository;
 import com.zenika.survivalbackend.repository.WorkflowRuleRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -23,18 +24,22 @@ public class UserStoryService {
         this.workflowRuleRepository = workflowRuleRepository;
     }
 
-    public List<UserStory> retrieveAllUserStories() {
+    public List<UserStory> getAllUserStories() {
         return userStoryRepository.findAll();
     }
 
-    public void saveUserStory(UserStory userStory) {
+    @Transactional
+    public void editUserStory(UserStory userStory) {
         Project project = projectRepository.getReferenceById(userStory.getProjectId());
-        WorkflowRule workflowRule = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(userStory.getProjectId(), userStory.getUserStoryStatus());
-
-        if (project.getApplyWorkflows() && workflowRule != null) {
-            long count = userStoryRepository.countByProjectIdAndIdNot(userStory.getProjectId(), userStory.getId());
-            if (count >= workflowRule.getMaxNumberOfUserStories())
-                throw new IllegalArgumentException("The maximum number of stories in status has been reached");
+        if (project.getApplyWorkflows()) {
+            List<WorkflowRule> workflowRules = workflowRuleRepository.findAllByProjectIdAndUserStoryStatus(
+                    userStory.getProjectId(), userStory.getUserStoryStatus());
+            workflowRules.forEach(workflowRule -> {
+                long count = userStoryRepository.countByProjectIdAndUserStoryStatusAndIdNot(userStory.getProjectId(),
+                        userStory.getUserStoryStatus(), userStory.getId());
+                if (count >= workflowRule.getMaxNumberOfUserStories())
+                    throw new IllegalArgumentException("The maximum number of stories in status has been reached");
+            });
         }
         userStoryRepository.save(userStory);
     }
