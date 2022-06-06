@@ -17,7 +17,7 @@ public class UserStory {
 
     private String description;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
 
     @Embedded
