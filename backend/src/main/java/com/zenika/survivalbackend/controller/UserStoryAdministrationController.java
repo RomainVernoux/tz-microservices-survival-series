@@ -3,15 +3,17 @@ package com.zenika.survivalbackend.controller;
 import com.zenika.survivalbackend.repository.UserStoryRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/user-stories")
+@RestController
+@RequestMapping("/user-stories")
 @Profile("test")
-public class UserStoryAdminitrationController {
+public class UserStoryAdministrationController {
 
     private UserStoryRepository userStoryRepository;
 
-    public UserStoryAdminitrationController(UserStoryRepository userStoryRepository) {
+    public UserStoryAdministrationController(UserStoryRepository userStoryRepository) {
         this.userStoryRepository = userStoryRepository;
     }
 

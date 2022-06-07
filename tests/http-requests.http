@@ -1,2 +1,6 @@
 GET http://localhost:8080/user-stories
 Accept: application/json
+
+###
+DELETE http://localhost:8080/user-stories
+Accept: application/json
