@@ -18,8 +18,6 @@ public class UserStory {
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
 
-    @Embedded
-
     public UUID getId() {
         return id;
     }
