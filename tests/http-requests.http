@@ -1,6 +1,28 @@
 GET http://localhost:8080/user-stories
-Accept: application/json
 
 ###
 DELETE http://localhost:8080/user-stories
-Accept: application/json
+
+### UPDATE
+PUT http://localhost:8080/user-stories
+Content-Type: application/json
+
+{
+    "id": "664535bf-8e8d-45b2-b17c-549a4017ac44",
+    "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
+    "title": "Develop controllers",
+    "description": "As a user I want to have a controller that does something",
+    "userStoryStatus": "IN_PROGRESS"
+}
+
+### CREATE
+POST http://localhost:8080/user-stories
+Content-Type: application/json
+
+{
+    "id": "7ecd47c4-892d-4493-afe1-ffc4a838cb15",
+    "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
+    "title": "New US",
+    "description": "This is a new user story",
+    "userStoryStatus": "IN_PROGRESS"
+}

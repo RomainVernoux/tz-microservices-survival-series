@@ -1,10 +1,9 @@
 package com.zenika.survivalbackend.controller;
 
+import com.zenika.survivalbackend.model.UserStory;
 import com.zenika.survivalbackend.repository.UserStoryRepository;
 import org.springframework.context.annotation.Profile;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user-stories")
@@ -20,6 +19,11 @@ public class UserStoryAdministrationController {
     @DeleteMapping
     public void deleteAll() {
         userStoryRepository.deleteAll();
+    }
+
+    @PostMapping
+    public UserStory editUserStory(@RequestBody UserStory userStory) {
+        return userStoryRepository.save(userStory);
     }
 
 }
