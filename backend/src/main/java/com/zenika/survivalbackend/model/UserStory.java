@@ -1,7 +1,6 @@
 package com.zenika.survivalbackend.model;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -20,7 +19,6 @@ public class UserStory {
     private UserStoryStatus userStoryStatus;
 
     @Embedded
-    private AdministrativeInformation administrativeInformation;
 
     public UUID getId() {
         return id;
@@ -62,11 +60,4 @@ public class UserStory {
         this.userStoryStatus = userStoryStatus;
     }
 
-    public AdministrativeInformation getAdministrativeInformation() {
-        return administrativeInformation;
-    }
-
-    public void setAdministrativeInformation(AdministrativeInformation administrativeInformation) {
-        this.administrativeInformation = administrativeInformation;
-    }
 }
