@@ -2,15 +2,15 @@ package com.zenika.survivaltester;
 
 import com.zenika.survivaltester.model.UserStory;
 import com.zenika.survivaltester.model.WorkflowRule;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -22,20 +22,20 @@ import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-//@SpringBootTest
+@SpringBootTest
 public class SurvivalTesterApplicationTests {
 
+    @Autowired
+    JdbcTemplate jdbcTemplate;
     Logger logger = LoggerFactory.getLogger(SurvivalTesterApplicationTests.class);
+    TestRestTemplate testRestTemplate = new TestRestTemplate();
 
-    static JdbcTemplate jdbcTemplate = jdbcTemplate();
-    static TestRestTemplate testRestTemplate = new TestRestTemplate();
     private final static String userStoriesUrl = "http://localhost:8080/user-stories";
     private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
 
 
-    @BeforeAll
-    static void init() throws Exception {
-        jdbcTemplate = jdbcTemplate();
+    @BeforeEach
+    public void init() {
         testRestTemplate.delete(userStoriesUrl);
         testRestTemplate.delete(workflowRulesUrl);
     }
@@ -71,20 +71,6 @@ public class SurvivalTesterApplicationTests {
     void createProjectRules(UUID projectId) {
         logger.info("{} is configuring rules for project {}", Thread.currentThread().getName(), projectId);
         testRestTemplate.postForLocation(workflowRulesUrl, new WorkflowRule(UUID.randomUUID(), projectId, "IN_PROGRESS", 3));
-    }
-
-
-    static JdbcTemplate jdbcTemplate() {
-        // extract this 4 parameters using your own logic
-        final String driverClassName = "org.postgresql.Driver";
-        final String jdbcUrl = "jdbc:postgresql://localhost:5432/postgres";
-        final String username = "postgres";
-        final String password = "acomplexpassword";
-        // Build dataSource manually:
-        final DataSource dataSource = DataSourceBuilder.create().driverClassName(driverClassName).url(jdbcUrl).username(username).password(password).build();
-
-        // and make the jdbcTemplate
-        return new JdbcTemplate(dataSource);
     }
 
 
