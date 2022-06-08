@@ -10,6 +10,9 @@ public class UserStory {
     private String description;
     private String userStoryStatus;
 
+    public UserStory() {
+    }
+
     public UserStory(UUID id, UUID projectId, String title, String description, String userStoryStatus) {
         this.id = id;
         this.projectId = projectId;

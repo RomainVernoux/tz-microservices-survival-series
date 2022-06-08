@@ -11,6 +11,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -18,6 +19,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 //@SpringBootTest
 public class SurvivalTesterApplicationTests {
@@ -29,8 +32,6 @@ public class SurvivalTesterApplicationTests {
     private final static String userStoriesUrl = "http://localhost:8080/user-stories";
     private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
 
-    ExecutorService executorService = Executors.newFixedThreadPool(4);
-
 
     @BeforeAll
     static void init() throws Exception {
@@ -40,16 +41,26 @@ public class SurvivalTesterApplicationTests {
     }
 
     @Test
-    public void should_send_batch_of_requests() throws InterruptedException          //PASS
+    public void should_respect_wip_limit() throws InterruptedException          //PASS
     {
+        // GIVEN
+        int wipLimit = 3;
         UUID projectId = UUID.randomUUID();
         createProjectRules(projectId);
-        List<Callable<Void>> tasks = IntStream.range(1, 5).mapToObj(i -> (Callable<Void>) () -> this.saveUserStoryForProject(projectId)).collect(Collectors.toList());
+
+        // WHEN
+        List<Callable<Void>> tasks = IntStream.range(1, 5).mapToObj(i -> (Callable<Void>) () -> this.createUserStoryAndSetToInProgress(projectId)).collect(Collectors.toList());
+        ExecutorService executorService = Executors.newFixedThreadPool(wipLimit + 1);
         executorService.invokeAll(tasks);
+
+        // THEN
+        UserStory[] stories = testRestTemplate.getForObject(userStoriesUrl, UserStory[].class);
+        long inProgress = Arrays.stream(stories).filter(us -> us.getUserStoryStatus().equals("IN_PROGRESS")).count();
+        assertThat(inProgress).isEqualTo(3);
 
     }
 
-    Void saveUserStoryForProject(UUID projectId) {
+    Void createUserStoryAndSetToInProgress(UUID projectId) {
         UUID userStoryId = UUID.randomUUID();
         logger.info("{} is testing batch of calls for project {} and user story {}", Thread.currentThread().getName(), projectId, userStoryId);
         testRestTemplate.postForLocation(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "TODO"));

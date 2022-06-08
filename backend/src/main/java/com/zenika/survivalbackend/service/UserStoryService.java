@@ -33,20 +33,21 @@ public class UserStoryService {
         return userStoryRepository.findAll();
     }
 
-    @Transactional(isolation = Isolation.REPEATABLE_READ)
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     @Retryable(value = SQLException.class, maxAttempts = 5, backoff = @Backoff(delay = 10))
     public void editUserStory(UserStory userStory) {
 
         Optional<WorkflowRule> workflowRules = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
                 userStory.getProjectId(), userStory.getUserStoryStatus());
         workflowRules.ifPresent(workflowRule -> {
-            int currentCount = workflowRule.getCurrentNumberOfUserStories();
+            long currentCount = userStoryRepository.countByProjectIdAndUserStoryStatusAndIdNot(userStory.getProjectId(),
+                    userStory.getUserStoryStatus(), userStory.getId());
             logger.info("Current count {}", currentCount);
 
             if (currentCount >= workflowRule.getMaxNumberOfUserStories())
                 throw new IllegalArgumentException("The maximum number of stories in status has been reached");
 
-            workflowRule.setCurrentNumberOfUserStories(currentCount + 1);
+            //workflowRule.setCurrentNumberOfUserStories(currentCount + 1);
         });
 
         userStoryRepository.save(userStory);
