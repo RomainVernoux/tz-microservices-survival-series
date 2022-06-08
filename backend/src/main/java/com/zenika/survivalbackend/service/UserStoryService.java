@@ -6,6 +6,7 @@ import com.zenika.survivalbackend.repository.UserStoryRepository;
 import com.zenika.survivalbackend.repository.WorkflowRuleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -33,7 +34,7 @@ public class UserStoryService {
     }
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    @Retryable(value = SQLException.class, maxAttempts = 5)
+    @Retryable(value = SQLException.class, maxAttempts = 5, backoff = @Backoff(delay = 10))
     public void editUserStory(UserStory userStory) {
 
         Optional<WorkflowRule> workflowRules = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
