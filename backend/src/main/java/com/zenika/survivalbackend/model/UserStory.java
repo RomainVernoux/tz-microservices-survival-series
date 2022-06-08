@@ -6,10 +6,12 @@ import java.util.UUID;
 @Entity
 public class UserStory {
     @Id
-    @GeneratedValue
     private UUID id;
 
     private UUID projectId;
+
+    @Version
+    int version;
 
     private String title;
 
@@ -32,6 +34,14 @@ public class UserStory {
 
     public void setProjectId(UUID projectId) {
         this.projectId = projectId;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getTitle() {

@@ -26,3 +26,14 @@ Content-Type: application/json
     "description": "This is a new user story",
     "userStoryStatus": "IN_PROGRESS"
 }
+### UPDATE
+PUT http://localhost:8080/user-stories
+Content-Type: application/json
+
+{
+    "id": "7ecd47c4-892d-4493-afe1-ffc4a838cb15",
+    "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
+    "title": "New US",
+    "description": "This is a new user story 2",
+    "userStoryStatus": "TODO"
+}

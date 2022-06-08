@@ -29,7 +29,7 @@ public class SurvivalTesterApplicationTests {
     private final static String userStoriesUrl = "http://localhost:8080/user-stories";
     private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
 
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 
     @BeforeAll
@@ -52,6 +52,7 @@ public class SurvivalTesterApplicationTests {
     Void saveUserStoryForProject(UUID projectId) {
         UUID userStoryId = UUID.randomUUID();
         logger.info("{} is testing batch of calls for project {} and user story {}", Thread.currentThread().getName(), projectId, userStoryId);
+        testRestTemplate.postForLocation(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "TODO"));
         testRestTemplate.put(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "IN_PROGRESS"));
         return null;
     }
