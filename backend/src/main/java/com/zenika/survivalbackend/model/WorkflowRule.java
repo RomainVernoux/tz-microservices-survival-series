@@ -11,15 +11,12 @@ public class WorkflowRule {
 
     private UUID projectId;
 
-    @Version
-    int version;
-
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
 
     private int maxNumberOfUserStories;
 
-    private UUID lock;
+    private int currentNumberOfUserStories;
 
     public UUID getId() {
         return id;
@@ -35,14 +32,6 @@ public class WorkflowRule {
 
     public void setProjectId(UUID projectId) {
         this.projectId = projectId;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
     }
 
     public UserStoryStatus getUserStoryStatus() {
@@ -61,11 +50,12 @@ public class WorkflowRule {
         this.maxNumberOfUserStories = maxNumberOfUserStories;
     }
 
-    public UUID getLock() {
-        return lock;
+
+    public int getCurrentNumberOfUserStories() {
+        return currentNumberOfUserStories;
     }
 
-    public void setLock(UUID lock) {
-        this.lock = lock;
+    public void setCurrentNumberOfUserStories(int currentNumberOfUserStories) {
+        this.currentNumberOfUserStories = currentNumberOfUserStories;
     }
 }
