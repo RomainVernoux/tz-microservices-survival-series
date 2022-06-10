@@ -33,23 +33,33 @@ public class UserStoryService {
         return userStoryRepository.findAll();
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     @Retryable(value = SQLException.class, maxAttempts = 5, backoff = @Backoff(delay = 10))
     public void editUserStory(UserStory userStory) {
+        Optional<WorkflowRule> previousRule = retrievePreviousWorkflowRule(userStory);
+        previousRule.ifPresent(workflowRule -> {
+            workflowRule.setCurrentNumberOfUserStories(workflowRule.getCurrentNumberOfUserStories() - 1);
+            workflowRuleRepository.save(workflowRule);
+        });
 
         Optional<WorkflowRule> workflowRules = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
                 userStory.getProjectId(), userStory.getUserStoryStatus());
         workflowRules.ifPresent(workflowRule -> {
-            long currentCount = userStoryRepository.countByProjectIdAndUserStoryStatusAndIdNot(userStory.getProjectId(),
-                    userStory.getUserStoryStatus(), userStory.getId());
-            logger.info("Current count {}", currentCount);
+            var currentCount = workflowRule.getCurrentNumberOfUserStories();
 
             if (currentCount >= workflowRule.getMaxNumberOfUserStories())
                 throw new IllegalArgumentException("The maximum number of stories in status has been reached");
 
-            //workflowRule.setCurrentNumberOfUserStories(currentCount + 1);
+            workflowRule.setCurrentNumberOfUserStories(currentCount + 1);
+            workflowRuleRepository.save(workflowRule);
         });
 
         userStoryRepository.save(userStory);
+    }
+
+    private Optional<WorkflowRule> retrievePreviousWorkflowRule(UserStory userStory) {
+        Optional<UserStory> previousUserStory = userStoryRepository.findById(userStory.getId());
+        return previousUserStory.isPresent() ? workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
+                userStory.getProjectId(), previousUserStory.get().getUserStoryStatus()) : Optional.empty();
     }
 }

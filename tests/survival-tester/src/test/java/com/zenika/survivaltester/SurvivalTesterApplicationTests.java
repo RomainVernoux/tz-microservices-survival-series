@@ -45,12 +45,12 @@ public class SurvivalTesterApplicationTests {
     {
         // GIVEN
         int wipLimit = 3;
+        ExecutorService executorService = Executors.newFixedThreadPool(wipLimit + 1);
         UUID projectId = UUID.randomUUID();
         createProjectRules(projectId);
 
         // WHEN
-        List<Callable<Void>> tasks = IntStream.range(1, 5).mapToObj(i -> (Callable<Void>) () -> this.createUserStoryAndSetToInProgress(projectId)).collect(Collectors.toList());
-        ExecutorService executorService = Executors.newFixedThreadPool(wipLimit + 1);
+        List<Callable<Void>> tasks = IntStream.range(0, wipLimit + 1).mapToObj(i -> (Callable<Void>) () -> this.createUserStoryAndSetToInProgress(projectId)).collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
         // THEN
@@ -58,13 +58,31 @@ public class SurvivalTesterApplicationTests {
         long inProgress = Arrays.stream(stories).filter(us -> us.getUserStoryStatus().equals("IN_PROGRESS")).count();
         assertThat(inProgress).isEqualTo(3);
 
+        // AND WHEN
+        List<Callable<Void>> finishTasks = IntStream.range(0, stories.length).mapToObj(i -> (Callable<Void>) () -> this.finishTask(stories[i])).collect(Collectors.toList());
+        executorService.invokeAll(finishTasks);
+
+        // THEN
+        UserStory[] storiesAfterFinishing = testRestTemplate.getForObject(userStoriesUrl, UserStory[].class);
+        inProgress = Arrays.stream(storiesAfterFinishing).filter(us -> us.getUserStoryStatus().equals("IN_PROGRESS")).count();
+        var doneTasks = Arrays.stream(storiesAfterFinishing).filter(us -> us.getUserStoryStatus().equals("DONE")).count();
+        assertThat(inProgress).isEqualTo(0);
+        assertThat(doneTasks).isEqualTo(4);
+
+
     }
 
-    Void createUserStoryAndSetToInProgress(UUID projectId) {
+    private Void createUserStoryAndSetToInProgress(UUID projectId) {
         UUID userStoryId = UUID.randomUUID();
         logger.info("{} is testing batch of calls for project {} and user story {}", Thread.currentThread().getName(), projectId, userStoryId);
         testRestTemplate.postForLocation(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "TODO"));
         testRestTemplate.put(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "IN_PROGRESS"));
+        return null;
+    }
+
+    private Void finishTask(UserStory story) {
+        story.setUserStoryStatus("DONE");
+        testRestTemplate.put(userStoriesUrl, story);
         return null;
     }
 

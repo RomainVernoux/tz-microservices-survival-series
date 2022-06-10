@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zenika</groupId>
-    <artifactId>survival-backend</artifactId>
+    <artifactId>workflow-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>backend</name>
-    <description>backend</description>
+    <name>workflow-service</name>
+    <description>Workflow Service</description>
     <properties>
         <java.version>18</java.version>
     </properties>

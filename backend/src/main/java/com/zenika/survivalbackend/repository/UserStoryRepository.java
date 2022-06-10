@@ -11,4 +11,6 @@ import java.util.UUID;
 public interface UserStoryRepository extends JpaRepository<UserStory, UUID> {
 
     long countByProjectIdAndUserStoryStatusAndIdNot(UUID projectId, UserStoryStatus status, UUID userStoryId);
+
+
 }
