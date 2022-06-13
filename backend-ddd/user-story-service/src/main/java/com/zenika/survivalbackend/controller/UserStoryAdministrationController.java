@@ -22,7 +22,7 @@ public class UserStoryAdministrationController {
     }
 
     @PostMapping
-    public UserStory editUserStory(@RequestBody UserStory userStory) {
+    public UserStory createUserStory(@RequestBody UserStory userStory) {
         return userStoryRepository.save(userStory);
     }
 
