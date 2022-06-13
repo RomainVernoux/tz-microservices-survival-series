@@ -6,3 +6,42 @@ User: guest
 Password: guest
 
 
+Notes for DDD
+-------------
+
+Intro
+- discussed with the workflow product team, they will become an (optional) paid feature
+- feedback from Ops: beaucoup de charge sur user story, bcp moins sur les workflows
+
+
+1. Introduce language methods in service
+    updateWorkflowRuleOnTransitionFrom/To
+2. Anemic model
+    remove setters / add constructor for 2 objects => doesn't compile
+    state-changing methods on model
+    bonus : constructor to initiate state
+    we want to do the same for UserStory, but this requires changing the API
+3. Hexagonal architecture
+    rename packages
+    controller method => POST + rename service method + fix test (2 PUT -> POST + DTO)
+    interface for repositories
+    bonus: port/adapter
+4. Split into microservices
+    Copy/paste into modules from second project, remove code from other
+    Create Event/USStatusChangedEvent
+    Make changeStatus return event
+    EventBus interface
+
+
+3. Bonus: easy to test?
+
+To discuss
+------------------
+
+Use repo reference method from the beginning in the service
+WorkflowRules => workflow rule
+AdminControllers in test package ?
+Driver/Copilot
+Test: why test on done VS IN_PROGRESS?
+Prepare project with two modules ?
+
