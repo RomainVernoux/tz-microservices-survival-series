@@ -1,6 +1,6 @@
 package com.zenika.survivalbackend.controller;
 
-import com.zenika.survivalbackend.model.UserStoryEvent;
+import com.zenika.survivalbackend.controller.dto.UserStoryChangeStatusScheduled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -12,7 +12,7 @@ public class WorkflowMessageController {
     private static final Logger logger = LoggerFactory.getLogger(WorkflowMessageController.class);
 
     @RabbitListener(queues = "${spring.rabbitmq.queue}")
-    public void receivedMessage(UserStoryEvent message) {
+    public void receivedMessage(UserStoryChangeStatusScheduled message) {
         logger.info("Message Received is... " + message);
     }
 }

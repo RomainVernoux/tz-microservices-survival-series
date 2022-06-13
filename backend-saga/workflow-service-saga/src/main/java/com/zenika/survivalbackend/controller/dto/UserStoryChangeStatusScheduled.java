@@ -1,6 +1,7 @@
-package com.zenika.survivalbackend.model.userstory;
+package com.zenika.survivalbackend.controller.dto;
 
 import com.zenika.survivalbackend.model.Event;
+import com.zenika.survivalbackend.model.workflow.UserStoryStatus;
 
 import java.util.UUID;
 
@@ -8,12 +9,6 @@ public class UserStoryChangeStatusScheduled extends Event {
 
     private UUID userStoryId;
     private UserStoryStatus status;
-
-    public UserStoryChangeStatusScheduled(UUID id, UUID userStoryId, UserStoryStatus status) {
-        super(id);
-        this.userStoryId = userStoryId;
-        this.status = status;
-    }
 
     public UUID getUserStoryId() {
         return userStoryId;

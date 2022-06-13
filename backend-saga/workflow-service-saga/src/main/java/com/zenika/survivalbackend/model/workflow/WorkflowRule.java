@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.model;
+package com.zenika.survivalbackend.model.workflow;
 
 import javax.persistence.*;
 import java.util.UUID;

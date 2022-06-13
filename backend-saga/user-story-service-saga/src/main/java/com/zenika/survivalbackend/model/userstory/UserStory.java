@@ -28,9 +28,9 @@ public class UserStory {
     public List<Event> changeStatus(UserStoryStatus status) {
         if (this.changingStatus)
             throw new IllegalStateException("The user story is already in the process of changing its status");
-        
+
         this.changingStatus = true;
-        return List.of(new UserStoryChangeStatusScheduled(this.id, status));
+        return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, status));
     }
 
     public UUID getId() {

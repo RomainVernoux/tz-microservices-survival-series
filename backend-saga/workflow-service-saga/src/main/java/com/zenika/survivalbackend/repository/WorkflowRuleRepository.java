@@ -1,15 +1,12 @@
 package com.zenika.survivalbackend.repository;
 
-import com.zenika.survivalbackend.model.UserStoryStatus;
-import com.zenika.survivalbackend.model.WorkflowRule;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import com.zenika.survivalbackend.model.workflow.UserStoryStatus;
+import com.zenika.survivalbackend.model.workflow.WorkflowRule;
 
 import java.util.Optional;
 import java.util.UUID;
 
-@Repository
-public interface WorkflowRuleRepository extends JpaRepository<WorkflowRule, UUID> {
+public interface WorkflowRuleRepository {
 
     Optional<WorkflowRule> findFirstByProjectIdAndUserStoryStatus(UUID projectId, UserStoryStatus userStoryStatus);
 }

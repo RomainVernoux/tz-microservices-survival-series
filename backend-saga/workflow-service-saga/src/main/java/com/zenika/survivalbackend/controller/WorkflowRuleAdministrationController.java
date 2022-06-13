@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.controller;
 
-import com.zenika.survivalbackend.model.WorkflowRule;
-import com.zenika.survivalbackend.repository.WorkflowRuleRepository;
+import com.zenika.survivalbackend.infrastructure.repository.WorkflowRuleJpaRepository;
+import com.zenika.survivalbackend.model.workflow.WorkflowRule;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class WorkflowRuleAdministrationController {
 
-    private WorkflowRuleRepository workflowRuleRepository;
+    private WorkflowRuleJpaRepository workflowRuleJpaRepository;
 
-    public WorkflowRuleAdministrationController(WorkflowRuleRepository workflowRuleRepository) {
-        this.workflowRuleRepository = workflowRuleRepository;
+    public WorkflowRuleAdministrationController(WorkflowRuleJpaRepository workflowRuleJpaRepository) {
+        this.workflowRuleJpaRepository = workflowRuleJpaRepository;
     }
 
     @DeleteMapping
     public void deleteAll() {
-        workflowRuleRepository.deleteAll();
+        workflowRuleJpaRepository.deleteAll();
     }
 
     @PostMapping
     public WorkflowRule saveWorkflowRule(@RequestBody WorkflowRule workflowRule) {
-        return workflowRuleRepository.save(workflowRule);
+        return workflowRuleJpaRepository.save(workflowRule);
     }
 
 }
