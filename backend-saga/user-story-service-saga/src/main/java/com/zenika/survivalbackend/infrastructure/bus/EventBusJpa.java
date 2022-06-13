@@ -6,19 +6,22 @@ import com.zenika.survivalbackend.model.Event;
 import com.zenika.survivalbackend.model.EventBus;
 import com.zenika.survivalbackend.model.EventHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
-public class RabbitEventBus implements EventBus {
+public class EventBusJpa implements EventBus {
 
 
     private ObjectMapper objectMapper;
     private ActivityRepository activityRepository;
     private final Map<Class<? extends Event>, Set<EventHandler>> subscribers = new HashMap<>();
 
-    public RabbitEventBus(ObjectMapper objectMapper,
-                          ActivityRepository activityRepository) {
+    public EventBusJpa(ObjectMapper objectMapper,
+                       ActivityRepository activityRepository) {
         this.objectMapper = objectMapper;
         this.activityRepository = activityRepository;
     }
@@ -41,16 +44,16 @@ public class RabbitEventBus implements EventBus {
                 }
         );
     }
-/*
 
-    @Value("${spring.rabbitmq.exchange}")
-    private String exchange;
-
-    @Value("${spring.rabbitmq.routingKey}")
-    private String routingKey;
-    private void doEmit() {
-        rabbitTemplate.convertAndSend(exchange, routingKey, new UserStoryChangeStatusScheduled(UUID.randomUUID(), UserStoryStatus.IN_PROGRESS));
+    public List<Activity> getPendingOutboundActivities() {
+        return activityRepository.findByActivityDirectionAndHandledFalse(ActivityDirection.OUTBOUND);
     }
 
- */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void markAsHandled(Activity activity) {
+        activity.setHandled(true);
+        activity.setHandledDate(LocalDateTime.now());
+        activityRepository.save(activity);
+    }
+
 }

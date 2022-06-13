@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface UserStoryRepositoryJpa extends JpaRepository<UserStory, UUID>, UserStoryRepository {
-
+    @Override
+    UserStory save(UserStory userStory);
 }

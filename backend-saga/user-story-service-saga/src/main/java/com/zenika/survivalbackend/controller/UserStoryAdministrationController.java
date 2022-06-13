@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class UserStoryAdministrationController {
 
-    private UserStoryRepositoryJpa userStoryRepository;
+    private UserStoryRepositoryJpa userStoryRepositoryJpa;
 
-    public UserStoryAdministrationController(UserStoryRepositoryJpa userStoryRepository) {
-        this.userStoryRepository = userStoryRepository;
+    public UserStoryAdministrationController(UserStoryRepositoryJpa userStoryRepositoryJpa) {
+        this.userStoryRepositoryJpa = userStoryRepositoryJpa;
     }
 
     @DeleteMapping
     public void deleteAll() {
-        userStoryRepository.deleteAll();
+        userStoryRepositoryJpa.deleteAll();
     }
 
     @PostMapping
     public UserStory createUserStory(@RequestBody UserStory userStory) {
-        return userStoryRepository.save(userStory);
+        return userStoryRepositoryJpa.save(userStory);
     }
 
 }

@@ -11,7 +11,8 @@ public class Activity {
     private UUID id;
     private ActivityDirection activityDirection;
     private String body;
-    private boolean handled;
+    private LocalDateTime occurredOn = LocalDateTime.now();
+    private Boolean handled = Boolean.FALSE;
     private LocalDateTime handledDate;
 
     public Activity() {
@@ -47,11 +48,19 @@ public class Activity {
         this.body = body;
     }
 
-    public boolean isHandled() {
+    public LocalDateTime getOccurredOn() {
+        return occurredOn;
+    }
+
+    public void setOccurredOn(LocalDateTime occurredOn) {
+        this.occurredOn = occurredOn;
+    }
+
+    public Boolean getHandled() {
         return handled;
     }
 
-    public void setHandled(boolean handled) {
+    public void setHandled(Boolean handled) {
         this.handled = handled;
     }
 
