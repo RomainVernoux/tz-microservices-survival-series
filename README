@@ -38,9 +38,6 @@ Intro
 To discuss
 ------------------
 
-Use repo reference method from the beginning in the service
-WorkflowRules => workflow rule
-AdminControllers in test package ?
 Driver/Copilot
 Test: why test on done VS IN_PROGRESS?
 Prepare project with two modules ?

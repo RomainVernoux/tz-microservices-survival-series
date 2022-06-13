@@ -19,8 +19,6 @@ import java.util.Optional;
 @Service
 public class UserStoryService {
 
-    Logger logger = LoggerFactory.getLogger(UserStoryService.class);
-
     private final UserStoryRepository userStoryRepository;
     private final WorkflowRuleRepository workflowRuleRepository;
 
@@ -42,9 +40,9 @@ public class UserStoryService {
             workflowRuleRepository.save(workflowRule);
         });
 
-        Optional<WorkflowRule> workflowRules = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
+        Optional<WorkflowRule> nextRule = workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(
                 userStory.getProjectId(), userStory.getUserStoryStatus());
-        workflowRules.ifPresent(workflowRule -> {
+        nextRule.ifPresent(workflowRule -> {
             var currentCount = workflowRule.getCurrentNumberOfUserStories();
 
             if (currentCount >= workflowRule.getMaxNumberOfUserStories())

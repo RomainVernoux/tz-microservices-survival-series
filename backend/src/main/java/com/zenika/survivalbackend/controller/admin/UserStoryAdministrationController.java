@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.controller;
+package com.zenika.survivalbackend.controller.admin;
 
 import com.zenika.survivalbackend.model.UserStory;
 import com.zenika.survivalbackend.repository.UserStoryRepository;
