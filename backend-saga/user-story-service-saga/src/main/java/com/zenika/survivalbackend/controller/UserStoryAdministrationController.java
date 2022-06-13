@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.controller;
 
-import com.zenika.survivalbackend.model.UserStory;
-import com.zenika.survivalbackend.repository.UserStoryRepository;
+import com.zenika.survivalbackend.infrastructure.repository.UserStoryRepositoryJpa;
+import com.zenika.survivalbackend.model.userstory.UserStory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class UserStoryAdministrationController {
 
-    private UserStoryRepository userStoryRepository;
+    private UserStoryRepositoryJpa userStoryRepository;
 
-    public UserStoryAdministrationController(UserStoryRepository userStoryRepository) {
+    public UserStoryAdministrationController(UserStoryRepositoryJpa userStoryRepository) {
         this.userStoryRepository = userStoryRepository;
     }
 
