@@ -5,10 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zenika.survivalbackend.model.Event;
 import com.zenika.survivalbackend.model.EventBus;
 import com.zenika.survivalbackend.model.EventHandler;
-import com.zenika.survivalbackend.model.userstory.UserStoryChangeStatusScheduled;
-import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -16,19 +12,13 @@ import java.util.*;
 @Component
 public class RabbitEventBus implements EventBus {
 
-    @Value("${spring.rabbitmq.exchange}")
-    private String exchange;
 
-    @Value("${spring.rabbitmq.routingKey}")
-    private String routingKey;
-    private RabbitTemplate rabbitTemplate;
     private ObjectMapper objectMapper;
     private ActivityRepository activityRepository;
     private final Map<Class<? extends Event>, Set<EventHandler>> subscribers = new HashMap<>();
 
-    public RabbitEventBus(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper,
+    public RabbitEventBus(ObjectMapper objectMapper,
                           ActivityRepository activityRepository) {
-        this.rabbitTemplate = rabbitTemplate;
         this.objectMapper = objectMapper;
         this.activityRepository = activityRepository;
     }
@@ -51,8 +41,16 @@ public class RabbitEventBus implements EventBus {
                 }
         );
     }
+/*
 
+    @Value("${spring.rabbitmq.exchange}")
+    private String exchange;
+
+    @Value("${spring.rabbitmq.routingKey}")
+    private String routingKey;
     private void doEmit() {
         rabbitTemplate.convertAndSend(exchange, routingKey, new UserStoryChangeStatusScheduled(UUID.randomUUID(), UserStoryStatus.IN_PROGRESS));
     }
+
+ */
 }
