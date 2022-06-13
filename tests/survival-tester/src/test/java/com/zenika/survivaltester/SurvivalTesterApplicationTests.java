@@ -1,17 +1,16 @@
 package com.zenika.survivaltester;
 
-import com.zenika.survivaltester.model.UserStory;
-import com.zenika.survivaltester.model.WorkflowRule;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -27,8 +26,8 @@ public class SurvivalTesterApplicationTests {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    Logger logger = LoggerFactory.getLogger(SurvivalTesterApplicationTests.class);
     TestRestTemplate testRestTemplate = new TestRestTemplate();
+    ObjectMapper jsonMapper = new ObjectMapper();
 
     private final static String userStoriesUrl = "http://localhost:8080/user-stories";
     private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
@@ -36,60 +35,119 @@ public class SurvivalTesterApplicationTests {
 
     @BeforeEach
     public void init() {
-        testRestTemplate.delete(userStoriesUrl);
-        testRestTemplate.delete(workflowRulesUrl);
+        deleteAllUserStories();
+        deleteAllUserWorkflowRules();
     }
 
     @Test
-    public void should_respect_wip_limit() throws InterruptedException          //PASS
-    {
-        // GIVEN
-        int wipLimit = 3;
-        ExecutorService executorService = Executors.newFixedThreadPool(wipLimit + 1);
+    public void should_change_user_story_status() throws JsonProcessingException {
         UUID projectId = UUID.randomUUID();
-        createProjectRules(projectId);
+        UUID userStoryId = UUID.randomUUID();
+        createUserStory(userStoryId, projectId, "US1", "Desc1", "TODO");
+
+        changeUserStoryStatus(userStoryId, projectId, "US1", "Desc2", "IN_PROGRESS");
+
+        ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+        assertThat(stories.get(0).get("userStoryStatus").asText()).isEqualTo("IN_PROGRESS");
+    }
+
+    @Test
+    public void should_respect_wip_limit() throws JsonProcessingException {
+        UUID projectId = UUID.randomUUID();
+        UUID userStory1Id = UUID.randomUUID();
+        UUID userStory2Id = UUID.randomUUID();
+        UUID workflowRuleId = UUID.randomUUID();
+        int wipLimit = 1;
+        createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
+        createUserStory(userStory1Id, projectId, "US1", "Desc1", "TODO");
+        createUserStory(userStory2Id, projectId, "US2", "Desc2", "TODO");
+
+        changeUserStoryStatus(userStory1Id, projectId, "US1", "Desc1", "IN_PROGRESS");
+        changeUserStoryStatus(userStory2Id, projectId, "US2", "Desc2", "IN_PROGRESS");
+
+        ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+        assertThat(stories.findValuesAsText("userStoryStatus"))
+                .containsExactlyInAnyOrder("IN_PROGRESS", "TODO");
+    }
+
+    @Test
+    public void should_respect_wip_limit_with_concurrent_access() throws InterruptedException, JsonProcessingException {
+        // GIVEN
+        UUID projectId = UUID.randomUUID();
+        List<UUID> userStoryIds = List.of(
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                UUID.randomUUID(),
+                UUID.randomUUID()
+        );
+        UUID workflowRuleId = UUID.randomUUID();
+        int wipLimit = 3;
+        createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
+        createUserStory(userStoryIds.get(0), projectId, "US1", "Desc1", "TODO");
+        createUserStory(userStoryIds.get(1), projectId, "US2", "Desc2", "TODO");
+        createUserStory(userStoryIds.get(2), projectId, "US3", "Desc3", "TODO");
+        createUserStory(userStoryIds.get(3), projectId, "US4", "Desc4", "TODO");
+        ExecutorService executorService = Executors.newFixedThreadPool(wipLimit + 1);
 
         // WHEN
-        List<Callable<Void>> tasks = IntStream.range(0, wipLimit + 1).mapToObj(i -> (Callable<Void>) () -> this.createUserStoryAndSetToInProgress(projectId)).collect(Collectors.toList());
+        List<Callable<Void>> tasks = IntStream.range(0, wipLimit + 1)
+                .<Callable<Void>>mapToObj(i -> () -> {
+                    changeUserStoryStatus(userStoryIds.get(i), projectId, "", "", "IN_PROGRESS");
+                    return null;
+                })
+                .collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
         // THEN
-        UserStory[] stories = testRestTemplate.getForObject(userStoriesUrl, UserStory[].class);
-        long inProgress = Arrays.stream(stories).filter(us -> us.getUserStoryStatus().equals("IN_PROGRESS")).count();
-        assertThat(inProgress).isEqualTo(3);
-
-        // AND WHEN
-        List<Callable<Void>> finishTasks = IntStream.range(0, stories.length).mapToObj(i -> (Callable<Void>) () -> this.finishTask(stories[i])).collect(Collectors.toList());
-        executorService.invokeAll(finishTasks);
-
-        // THEN
-        UserStory[] storiesAfterFinishing = testRestTemplate.getForObject(userStoriesUrl, UserStory[].class);
-        inProgress = Arrays.stream(storiesAfterFinishing).filter(us -> us.getUserStoryStatus().equals("IN_PROGRESS")).count();
-        var doneTasks = Arrays.stream(storiesAfterFinishing).filter(us -> us.getUserStoryStatus().equals("DONE")).count();
-        assertThat(inProgress).isEqualTo(0);
-        assertThat(doneTasks).isEqualTo(4);
-
-
+        ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+        assertThat(stories.findValuesAsText("userStoryStatus"))
+                .containsExactlyInAnyOrder("IN_PROGRESS", "IN_PROGRESS", "IN_PROGRESS", "TODO");
     }
 
-    private Void createUserStoryAndSetToInProgress(UUID projectId) {
-        UUID userStoryId = UUID.randomUUID();
-        logger.info("{} is testing batch of calls for project {} and user story {}", Thread.currentThread().getName(), projectId, userStoryId);
-        testRestTemplate.postForLocation(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "TODO"));
-        testRestTemplate.put(userStoriesUrl, new UserStory(userStoryId, projectId, "Title", "Description", "IN_PROGRESS"));
-        return null;
+    private void createUserStory(UUID userStoryId, UUID projectId, String title, String description, String status)
+            throws JsonProcessingException {
+        ObjectNode body = jsonMapper.readValue("""
+                {
+                    "id": "%s",
+                    "projectId": "%s",
+                    "title": "%s",
+                    "description": "%s",
+                    "userStoryStatus": "%s"
+                }
+                """.formatted(userStoryId, projectId, title, description, status), ObjectNode.class);
+        testRestTemplate.postForObject(userStoriesUrl, body, Void.class);
     }
 
-    private Void finishTask(UserStory story) {
-        story.setUserStoryStatus("DONE");
-        testRestTemplate.put(userStoriesUrl, story);
-        return null;
+    private void createWipWorkflowRule(UUID workflowRuleId, UUID projectId, int wipLimit) throws JsonProcessingException {
+        ObjectNode body = jsonMapper.readValue("""
+                {
+                    "id": "%s",
+                    "projectId": "%s",
+                    "userStoryStatus": "%s",
+                    "maxNumberOfUserStories": "%d"
+                }
+                """.formatted(workflowRuleId, projectId, "IN_PROGRESS", wipLimit), ObjectNode.class);
+        testRestTemplate.postForObject(workflowRulesUrl, body, Void.class);
     }
 
-    void createProjectRules(UUID projectId) {
-        logger.info("{} is configuring rules for project {}", Thread.currentThread().getName(), projectId);
-        testRestTemplate.postForLocation(workflowRulesUrl, new WorkflowRule(UUID.randomUUID(), projectId, "IN_PROGRESS", 3));
+    private void changeUserStoryStatus(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
+        ObjectNode body = jsonMapper.readValue("""
+                {
+                    "id": "%s",
+                    "projectId": "%s",
+                    "title": "%s",
+                    "description": "%s",
+                    "userStoryStatus": "%s"
+                }
+                """.formatted(userStoryId, projectId, title, description, newStatus), ObjectNode.class);
+        testRestTemplate.put(userStoriesUrl, body);
     }
 
+    private void deleteAllUserStories() {
+        testRestTemplate.delete(userStoriesUrl);
+    }
 
+    private void deleteAllUserWorkflowRules() {
+        testRestTemplate.delete(workflowRulesUrl);
+    }
 }
