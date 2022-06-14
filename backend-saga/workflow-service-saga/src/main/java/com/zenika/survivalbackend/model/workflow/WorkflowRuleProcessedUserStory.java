@@ -5,16 +5,19 @@ import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
 
 import java.util.UUID;
 
-public class WorkflowRuleAcceptedUserStory extends Event {
+public class WorkflowRuleProcessedUserStory extends Event {
     private UUID userStoryId;
     private UUID projectId;
     private UserStoryStatus status;
 
-    public WorkflowRuleAcceptedUserStory(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus status) {
+    private boolean accepted;
+
+    public WorkflowRuleProcessedUserStory(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus status, boolean accepted) {
         super(id);
         this.userStoryId = userStoryId;
         this.projectId = projectId;
         this.status = status;
+        this.accepted = accepted;
     }
 
     public UUID getUserStoryId() {
@@ -39,5 +42,13 @@ public class WorkflowRuleAcceptedUserStory extends Event {
 
     public void setStatus(UserStoryStatus status) {
         this.status = status;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
     }
 }

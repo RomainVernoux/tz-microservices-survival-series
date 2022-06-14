@@ -18,7 +18,7 @@ public class WorkflowMessageController {
         this.eventBusJpa = eventBusJpa;
     }
 
-    @RabbitListener(queues = "${spring.rabbitmq.queue}")
+    @RabbitListener(queues = "${spring.rabbitmq.workflow-queue}")
     public void receivedMessage(UserStoryChangeStatusScheduled event) {
         eventBusJpa.receiveEvent(event);
     }

@@ -16,8 +16,10 @@ spring:
     port: 15672
     username: guest
     password: guest
-    exchange: survival.exchange
-    queue: survival.queue
+    workflow-exchange: survival.exchange.workflow
+    workflow-queue: survival.queue.workflow
+    userStory-exchange: survival.exchange.userStory
+    userStory-queue: survival.queue.userStory
     routingKey: survival.routingKey
 
 hibernate:

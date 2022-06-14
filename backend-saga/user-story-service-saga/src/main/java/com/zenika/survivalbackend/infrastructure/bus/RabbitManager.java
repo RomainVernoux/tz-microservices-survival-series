@@ -15,7 +15,7 @@ public class RabbitManager {
     EventBusJpa eventBusJpa;
     RabbitTemplate rabbitTemplate;
 
-    @Value("${spring.rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.userStory-exchange}")
     private String exchange;
 
     @Value("${spring.rabbitmq.routingKey}")
