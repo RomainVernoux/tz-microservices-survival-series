@@ -14,10 +14,14 @@ import java.util.UUID;
 public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserStory> {
 
     private final UserStoryRepository userStoryRepository;
+    private final UserStoryChangeStatusSagaRepository userStoryChangeStatusSagaRepository;
     private final EventBus eventBus;
 
-    public UserStoryService(UserStoryRepository userStoryRepository, EventBus eventBus) {
+    public UserStoryService(UserStoryRepository userStoryRepository,
+                            UserStoryChangeStatusSagaRepository userStoryChangeStatusSagaRepository,
+                            EventBus eventBus) {
         this.userStoryRepository = userStoryRepository;
+        this.userStoryChangeStatusSagaRepository = userStoryChangeStatusSagaRepository;
         this.eventBus = eventBus;
     }
 
@@ -32,18 +36,34 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
 
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
-    public void changeUserStoryStatus(UUID id, UserStoryStatus status) {
-        UserStory userStory = userStoryRepository.find(id);
+    public void changeUserStoryStatus(UUID userStoryId, UserStoryStatus status) {
+        if (userStoryChangeStatusSagaRepository.findActiveSagaForUserStory(userStoryId).isPresent()) {
+            return;
+        }
+
+        UserStory userStory = userStoryRepository.find(userStoryId);
         List<Event> events = userStory.changeStatus(status);
         userStoryRepository.save(userStory);
+
+        UserStoryChangeStatusSaga saga = UserStoryChangeStatusSaga.from(userStory, status);
+        userStoryChangeStatusSagaRepository.save(saga);
+
         events.forEach(eventBus::emit);
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
     public void handle(WorkflowRuleProcessedUserStory event) {
-        UserStory userStory = userStoryRepository.find(event.getUserStoryId());
-        userStory.applyWorkflowRuleAck(event);
-        userStoryRepository.save(userStory);
+        userStoryChangeStatusSagaRepository.findActiveSagaForUserStory(event.getUserStoryId()).ifPresent(
+                saga -> {
+                    saga.applyWorkflowRuleAck(event);
+                    userStoryChangeStatusSagaRepository.save(saga);
+                    if (saga.proceedWithChangeStatus()) {
+                        UserStory userStory = userStoryRepository.find(event.getUserStoryId());
+                        userStory.confirmNewStatus(event.getStatus());
+                        userStoryRepository.save(userStory);
+                    }
+                }
+        );
     }
 }

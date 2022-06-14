@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,23 +16,13 @@ public class UserStory {
     private String description;
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
-    private Boolean changingStatus = Boolean.FALSE;
-    private Date lastStatusUpdate = new Date();
-
 
     public List<Event> changeStatus(UserStoryStatus status) {
-        if (this.changingStatus)
-            throw new IllegalStateException("The user story is already in the process of changing its status");
-        this.changingStatus = true;
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }
 
-    public void applyWorkflowRuleAck(WorkflowRuleProcessedUserStory event) {
-        if (event.getOccurredOn().before(this.lastStatusUpdate))
-            return;
-
-        this.changingStatus = false;
-        this.userStoryStatus = event.getStatus();
+    public void confirmNewStatus(UserStoryStatus status) {
+        this.userStoryStatus = status;
     }
 
     public UUID getId() {
@@ -68,14 +57,6 @@ public class UserStory {
         this.description = description;
     }
 
-    public Boolean getChangingStatus() {
-        return changingStatus;
-    }
-
-    public void setChangingStatus(Boolean changingStatus) {
-        this.changingStatus = changingStatus;
-    }
-
     public UserStoryStatus getUserStoryStatus() {
         return userStoryStatus;
     }
@@ -84,11 +65,4 @@ public class UserStory {
         this.userStoryStatus = userStoryStatus;
     }
 
-    public Date getLastStatusUpdate() {
-        return lastStatusUpdate;
-    }
-
-    public void setLastStatusUpdate(Date lastStatusUpdate) {
-        this.lastStatusUpdate = lastStatusUpdate;
-    }
 }
