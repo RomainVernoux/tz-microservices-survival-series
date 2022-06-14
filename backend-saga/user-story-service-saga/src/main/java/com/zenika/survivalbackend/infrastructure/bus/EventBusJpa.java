@@ -46,6 +46,26 @@ public class EventBusJpa implements EventBus {
         );
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void receiveEvent(Event event) {
+        if (activityRepository.existsByEventId(event.getId()))
+            throw new IllegalArgumentException("Duplicate event detected " + event.getId());
+
+        try {
+            Activity activity = new Activity(UUID.randomUUID(), event.getId(),
+                    ActivityDirection.INBOUND, objectMapper.writeValueAsString(event));
+            activity.setHandledDate(LocalDateTime.now());
+            activity.setHandled(true);
+            activityRepository.save(activity);
+
+            subscribers.getOrDefault(event.getClass(), Collections.emptySet()).forEach(
+                    handler -> handler.handle(event)
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public List<Activity> getPendingOutboundActivities() {
         return activityRepository.findByActivityDirectionAndHandledFalse(ActivityDirection.OUTBOUND);
     }

@@ -31,9 +31,11 @@ public class WorkflowRule {
         if (rejectUserStory) {
             events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, false));
         } else {
-            this.currentNumberOfUserStories = this.currentNumberOfUserStories - 1;
+            this.currentNumberOfUserStories = this.currentNumberOfUserStories + 1;
             events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, true));
-            removeWorkflowRule.currentNumberOfUserStories = removeWorkflowRule.currentNumberOfUserStories - 1;
+            if (removeWorkflowRule.maxNumberOfUserStories > 0) {
+                removeWorkflowRule.currentNumberOfUserStories = removeWorkflowRule.currentNumberOfUserStories - 1;
+            }
         }
         return events;
     }

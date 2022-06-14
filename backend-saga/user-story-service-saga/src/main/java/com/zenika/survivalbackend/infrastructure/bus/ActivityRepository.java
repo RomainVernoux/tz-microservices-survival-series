@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface ActivityRepository extends JpaRepository<Activity, UUID> {
     List<Activity> findByActivityDirectionAndHandledFalse(ActivityDirection activityDirection);
+
+    Boolean existsByEventId(UUID eventId);
 }

@@ -1,11 +1,13 @@
 package com.zenika.survivalbackend.model.userstory;
 
 import com.zenika.survivalbackend.model.Event;
+import com.zenika.survivalbackend.model.workflow.WorkflowRuleProcessedUserStory;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,8 @@ public class UserStory {
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
 
+    private Date lastStatusUpdate = new Date();
+
 
     public List<Event> changeStatus(UserStoryStatus status) {
         if (this.changingStatus)
@@ -31,6 +35,14 @@ public class UserStory {
 
         this.changingStatus = true;
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
+    }
+
+    public void processWorkflowRuleConstraints(WorkflowRuleProcessedUserStory event) {
+        if (event.getOccurredOn().before(this.lastStatusUpdate))
+            return;
+
+        this.changingStatus = false;
+        this.userStoryStatus = event.getStatus();
     }
 
     public UUID getId() {
@@ -79,5 +91,13 @@ public class UserStory {
 
     public void setUserStoryStatus(UserStoryStatus userStoryStatus) {
         this.userStoryStatus = userStoryStatus;
+    }
+
+    public Date getLastStatusUpdate() {
+        return lastStatusUpdate;
+    }
+
+    public void setLastStatusUpdate(Date lastStatusUpdate) {
+        this.lastStatusUpdate = lastStatusUpdate;
     }
 }

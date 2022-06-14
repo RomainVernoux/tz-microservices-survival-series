@@ -6,7 +6,7 @@ Content-Type: application/json
   "id": "6ef78bdf-6cb1-42fe-8880-ad7b15bd5ea9",
   "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
   "userStoryStatus": "TODO",
-  "maxNumberOfUserStories": -1
+  "maxNumberOfUserStories": 0
 }
 
 ### CREATE
@@ -28,5 +28,5 @@ Content-Type: application/json
   "id": "29cab4f1-8aee-4f73-8ca1-82b671411f69",
   "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
   "userStoryStatus": "DONE",
-  "maxNumberOfUserStories": -1
+  "maxNumberOfUserStories": 0
 }

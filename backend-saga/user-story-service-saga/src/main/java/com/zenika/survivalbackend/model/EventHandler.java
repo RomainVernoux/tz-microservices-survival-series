@@ -1,5 +1,5 @@
 package com.zenika.survivalbackend.model;
 
-public interface EventHandler {
-    void handle(Event event);
+public interface EventHandler<T extends Event> {
+    void handle(T event);
 }
