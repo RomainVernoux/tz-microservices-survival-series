@@ -19,7 +19,7 @@ public class HttpRequestBoundariesListener {
         this.rabbitManager = rabbitManager;
     }
 
-    @After("execution(* com.zenika.survivalbackend.controller.*.*(..))")
+    @After("execution(* com.zenika.survivalbackend.exposition.*.*(..))")
     public void afterMvcRequest() {
         logger.info("Web request finished, requesting rabbit manager to handle pending activities");
         rabbitManager.handlePendingActivities();

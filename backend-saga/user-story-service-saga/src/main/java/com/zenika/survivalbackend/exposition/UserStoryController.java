@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.controller;
+package com.zenika.survivalbackend.exposition;
 
 import com.zenika.survivalbackend.application.UserStoryService;
 import com.zenika.survivalbackend.domain.userstory.UserStory;

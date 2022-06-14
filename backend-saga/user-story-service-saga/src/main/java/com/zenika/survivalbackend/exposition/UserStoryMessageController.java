@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.controller;
+package com.zenika.survivalbackend.exposition;
 
 import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
 import com.zenika.survivalbackend.infrastructure.bus.EventBusJpa;
