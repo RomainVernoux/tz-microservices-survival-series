@@ -28,7 +28,4 @@ public class UserStoryController {
         userStoryService.changeUserStoryStatus(id, status);
     }
 
-    @GetMapping("/test")
-    public void test() {
-    }
 }

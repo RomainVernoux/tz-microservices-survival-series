@@ -3,7 +3,7 @@ package com.zenika.survivalbackend.domain;
 import java.util.Date;
 import java.util.UUID;
 
-public class Event {
+public abstract class Event {
     private UUID id;
 
     private Date occurredOn = new Date();

@@ -51,6 +51,5 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
         UserStory userStory = userStoryRepository.find(event.getUserStoryId());
         userStory.processWorkflowRuleConstraints(event);
         userStoryRepository.save(userStory);
-
     }
 }
