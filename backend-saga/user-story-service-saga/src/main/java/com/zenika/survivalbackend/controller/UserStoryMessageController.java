@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.controller;
 
+import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
 import com.zenika.survivalbackend.infrastructure.bus.EventBusJpa;
-import com.zenika.survivalbackend.model.workflow.WorkflowRuleProcessedUserStory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

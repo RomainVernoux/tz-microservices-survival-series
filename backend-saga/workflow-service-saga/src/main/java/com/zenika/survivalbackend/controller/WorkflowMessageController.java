@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.controller;
 
+import com.zenika.survivalbackend.domain.userstory.UserStoryChangeStatusScheduled;
 import com.zenika.survivalbackend.infrastructure.bus.EventBusJpa;
-import com.zenika.survivalbackend.model.userstory.UserStoryChangeStatusScheduled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

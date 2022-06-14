@@ -1,12 +1,12 @@
-package com.zenika.survivalbackend.service;
+package com.zenika.survivalbackend.application;
 
-import com.zenika.survivalbackend.model.Event;
-import com.zenika.survivalbackend.model.EventBus;
-import com.zenika.survivalbackend.model.EventHandler;
-import com.zenika.survivalbackend.model.userstory.UserStory;
-import com.zenika.survivalbackend.model.userstory.UserStoryRepository;
-import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
-import com.zenika.survivalbackend.model.workflow.WorkflowRuleProcessedUserStory;
+import com.zenika.survivalbackend.domain.Event;
+import com.zenika.survivalbackend.domain.EventBus;
+import com.zenika.survivalbackend.domain.EventHandler;
+import com.zenika.survivalbackend.domain.userstory.UserStory;
+import com.zenika.survivalbackend.domain.userstory.UserStoryRepository;
+import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
+import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
-package com.zenika.survivalbackend.model.userstory;
+package com.zenika.survivalbackend.domain.userstory;
 
-import com.zenika.survivalbackend.model.Event;
+import com.zenika.survivalbackend.domain.Event;
 
 import java.util.UUID;
 

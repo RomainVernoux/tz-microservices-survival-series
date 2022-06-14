@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.controller;
 
+import com.zenika.survivalbackend.domain.workflow.WorkflowRule;
 import com.zenika.survivalbackend.infrastructure.repository.WorkflowRuleJpaRepository;
-import com.zenika.survivalbackend.model.workflow.WorkflowRule;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 

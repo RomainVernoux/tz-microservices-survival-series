@@ -1,8 +1,8 @@
 package com.zenika.survivalbackend.controller;
 
-import com.zenika.survivalbackend.model.userstory.UserStory;
-import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
-import com.zenika.survivalbackend.service.UserStoryService;
+import com.zenika.survivalbackend.application.UserStoryService;
+import com.zenika.survivalbackend.domain.userstory.UserStory;
+import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,7 +1,6 @@
-package com.zenika.survivalbackend.repository;
+package com.zenika.survivalbackend.domain.workflow;
 
-import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
-import com.zenika.survivalbackend.model.workflow.WorkflowRule;
+import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.model;
+package com.zenika.survivalbackend.domain;
 
 import java.util.List;
 

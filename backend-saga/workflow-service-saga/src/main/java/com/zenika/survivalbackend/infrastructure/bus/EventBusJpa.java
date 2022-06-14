@@ -2,9 +2,9 @@ package com.zenika.survivalbackend.infrastructure.bus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zenika.survivalbackend.model.Event;
-import com.zenika.survivalbackend.model.EventBus;
-import com.zenika.survivalbackend.model.EventHandler;
+import com.zenika.survivalbackend.domain.Event;
+import com.zenika.survivalbackend.domain.EventBus;
+import com.zenika.survivalbackend.domain.EventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;

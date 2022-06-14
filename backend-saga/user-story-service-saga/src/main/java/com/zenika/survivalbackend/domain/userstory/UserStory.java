@@ -1,7 +1,7 @@
-package com.zenika.survivalbackend.model.userstory;
+package com.zenika.survivalbackend.domain.userstory;
 
-import com.zenika.survivalbackend.model.Event;
-import com.zenika.survivalbackend.model.workflow.WorkflowRuleProcessedUserStory;
+import com.zenika.survivalbackend.domain.Event;
+import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
