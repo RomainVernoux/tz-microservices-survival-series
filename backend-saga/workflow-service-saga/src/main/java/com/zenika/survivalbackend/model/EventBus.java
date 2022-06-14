@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface EventBus {
 
-    void subscribe(Class<? extends Event> eventClass, EventHandler eventHandler);
+    <T extends Event> void subscribe(Class<T> eventClass, EventHandler<T> eventHandler);
 
     void emitAll(List<Event> events);
 }

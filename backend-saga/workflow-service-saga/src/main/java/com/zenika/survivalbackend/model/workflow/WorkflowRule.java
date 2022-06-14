@@ -1,6 +1,11 @@
 package com.zenika.survivalbackend.model.workflow;
 
+import com.zenika.survivalbackend.model.Event;
+import com.zenika.survivalbackend.model.userstory.UserStoryStatus;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -17,6 +22,21 @@ public class WorkflowRule {
     private int maxNumberOfUserStories;
 
     private int currentNumberOfUserStories;
+
+    public List<Event> acceptUserStory(UUID userStoryId, WorkflowRule removeWorkflowRule) {
+        List<Event> events = new ArrayList<>();
+        boolean rejectUserStory = this.maxNumberOfUserStories > 0 &&
+                this.currentNumberOfUserStories >= this.maxNumberOfUserStories;
+
+        if (rejectUserStory) {
+            events.add(new WorkflowRuleRejectedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus));
+        } else {
+            this.currentNumberOfUserStories = this.currentNumberOfUserStories - 1;
+            events.add(new WorkflowRuleAcceptedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus));
+            removeWorkflowRule.currentNumberOfUserStories = removeWorkflowRule.currentNumberOfUserStories - 1;
+        }
+        return events;
+    }
 
     public UUID getId() {
         return id;
@@ -49,7 +69,6 @@ public class WorkflowRule {
     public void setMaxNumberOfUserStories(int maxNumberOfUserStories) {
         this.maxNumberOfUserStories = maxNumberOfUserStories;
     }
-
 
     public int getCurrentNumberOfUserStories() {
         return currentNumberOfUserStories;

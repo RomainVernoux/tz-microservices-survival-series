@@ -1,0 +1,20 @@
+GET http://localhost:8091/user-stories
+
+###
+DELETE http://localhost:8091/user-stories
+
+
+### CREATE
+POST http://localhost:8091/user-stories
+Content-Type: application/json
+
+{
+    "id": "7ecd47c4-892d-4493-afe1-ffc4a838cb15",
+    "projectId": "12c1526f-9916-4bc8-8bed-78e66267f652",
+    "title": "New US",
+    "description": "This is a new user story",
+    "userStoryStatus": "TODO"
+}
+### UPDATE
+PUT http://localhost:8091/user-stories/7ecd47c4-892d-4493-afe1-ffc4a838cb15/change-status/IN_PROGRESS
+Content-Type: application/json

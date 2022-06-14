@@ -1,6 +1,8 @@
 package com.zenika.survivalbackend.infrastructure.bus;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -11,6 +13,7 @@ public class Activity {
     private UUID id;
 
     private UUID eventId;
+    @Enumerated(EnumType.STRING)
     private ActivityDirection activityDirection;
     private String body;
     private LocalDateTime occurredOn = LocalDateTime.now();

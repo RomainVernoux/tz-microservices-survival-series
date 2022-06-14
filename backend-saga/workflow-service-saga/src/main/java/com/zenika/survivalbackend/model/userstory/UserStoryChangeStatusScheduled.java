@@ -11,14 +11,6 @@ public class UserStoryChangeStatusScheduled extends Event {
     private UserStoryStatus previousStatus;
     private UserStoryStatus newStatus;
 
-    public UserStoryChangeStatusScheduled(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus previousStatus, UserStoryStatus newStatus) {
-        super(id);
-        this.userStoryId = userStoryId;
-        this.projectId = projectId;
-        this.previousStatus = previousStatus;
-        this.newStatus = newStatus;
-    }
-
     public UUID getUserStoryId() {
         return userStoryId;
     }
