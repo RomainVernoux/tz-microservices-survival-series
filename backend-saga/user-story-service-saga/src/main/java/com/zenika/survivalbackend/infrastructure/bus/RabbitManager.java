@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class RabbitManager {
 
-    EventBusJpa eventBusJpa;
+    JpaEventBus jpaEventBus;
     RabbitTemplate rabbitTemplate;
 
     @Value("${spring.rabbitmq.workflow-exchange}")
@@ -21,17 +21,17 @@ public class RabbitManager {
     @Value("${spring.rabbitmq.routingKey}")
     private String routingKey;
 
-    public RabbitManager(EventBusJpa eventBusJpa, RabbitTemplate rabbitTemplate) {
-        this.eventBusJpa = eventBusJpa;
+    public RabbitManager(JpaEventBus jpaEventBus, RabbitTemplate rabbitTemplate) {
+        this.jpaEventBus = jpaEventBus;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void handlePendingActivities() {
-        List<Activity> activities = eventBusJpa.getPendingOutboundActivities();
+        List<Activity> activities = jpaEventBus.getPendingOutboundActivities();
         activities.forEach(activity -> {
             Message message = MessageBuilder.withBody(activity.getBody().getBytes(StandardCharsets.UTF_8)).build();
             rabbitTemplate.send(exchange, routingKey, message);
-            eventBusJpa.markAsHandled(activity);
+            jpaEventBus.markAsHandled(activity);
         });
     }
 }

@@ -1,17 +1,23 @@
 version: "3.3"
 services:
-  user-database:
+  monolith-database:
     image: postgres
     environment:
       POSTGRES_PASSWORD: acomplexpassword
     ports:
       - "5432:5432"
-  workflow-database:
+  user-database:
     image: postgres
     environment:
       POSTGRES_PASSWORD: acomplexpassword
     ports:
       - "15432:5432"
+  workflow-database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: acomplexpassword
+    ports:
+      - "25432:5432"
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'

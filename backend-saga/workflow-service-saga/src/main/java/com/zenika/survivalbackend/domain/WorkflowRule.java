@@ -1,7 +1,4 @@
-package com.zenika.survivalbackend.domain.workflow;
-
-import com.zenika.survivalbackend.domain.Event;
-import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
+package com.zenika.survivalbackend.domain;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,18 +20,16 @@ public class WorkflowRule {
 
     private int currentNumberOfUserStories;
 
-    public List<Event> acceptUserStory(UUID userStoryId, WorkflowRule removeWorkflowRule) {
+    public List<Event> userStoryTransitions(UUID userStoryId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
         List<Event> events = new ArrayList<>();
-        boolean rejectUserStory = this.maxNumberOfUserStories > 0 &&
-                this.currentNumberOfUserStories >= this.maxNumberOfUserStories;
-
-        if (rejectUserStory) {
-            events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, false));
-        } else {
-            this.currentNumberOfUserStories = this.currentNumberOfUserStories + 1;
-            events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, true));
-            if (removeWorkflowRule.maxNumberOfUserStories > 0) {
-                removeWorkflowRule.currentNumberOfUserStories = removeWorkflowRule.currentNumberOfUserStories - 1;
+        if (oldStatus == userStoryStatus) {
+            currentNumberOfUserStories--;
+        } else if (newStatus == userStoryStatus) {
+            if (currentNumberOfUserStories >= maxNumberOfUserStories) {
+                events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, false));
+            } else {
+                events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, true));
+                currentNumberOfUserStories++;
             }
         }
         return events;

@@ -24,7 +24,7 @@ public class UserStoryController {
     }
 
     @PostMapping("/{id}/change-status")
-    public void changeUserStoryStatus(@PathVariable UUID id, @RequestBody ChangeUserStoryStatusDTO dto) {
+    public void changeUserStoryStatus(@PathVariable UUID id, @RequestBody ChangeUserStoryStatusDto dto) {
         userStoryService.changeUserStoryStatus(id, UserStoryStatus.valueOf(dto.newStatus()));
     }
 }

@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.domain.userstory;
+package com.zenika.survivalbackend.domain;
 
 public enum UserStoryStatus {
     TODO,

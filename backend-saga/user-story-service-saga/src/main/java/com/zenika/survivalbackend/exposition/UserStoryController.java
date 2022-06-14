@@ -1,8 +1,8 @@
 package com.zenika.survivalbackend.exposition;
 
 import com.zenika.survivalbackend.application.UserStoryService;
-import com.zenika.survivalbackend.domain.userstory.UserStory;
-import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
+import com.zenika.survivalbackend.domain.UserStory;
+import com.zenika.survivalbackend.domain.UserStoryStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,9 +23,9 @@ public class UserStoryController {
         return userStoryService.getAllUserStories();
     }
 
-    @PutMapping("/{id}/change-status/{status}")
-    public void changeStatus(@PathVariable UUID id, @PathVariable UserStoryStatus status) {
-        userStoryService.changeUserStoryStatus(id, status);
+    @PutMapping("/{id}/change-status")
+    public void changeUserStoryStatus(@PathVariable UUID id, @RequestBody ChangeUserStoryStatusDto dto) {
+        userStoryService.changeUserStoryStatus(id, UserStoryStatus.valueOf(dto.newStatus()));
     }
 
 }

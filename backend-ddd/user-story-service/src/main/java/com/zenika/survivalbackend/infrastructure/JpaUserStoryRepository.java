@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class JPAUserStoryRepository implements UserStoryRepository {
+public class JpaUserStoryRepository implements UserStoryRepository {
 
-    private final UserStoryDAO userStoryDAO;
+    private final UserStoryDao userStoryDAO;
 
-    public JPAUserStoryRepository(UserStoryDAO userStoryDAO) {
+    public JpaUserStoryRepository(UserStoryDao userStoryDAO) {
         this.userStoryDAO = userStoryDAO;
     }
 

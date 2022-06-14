@@ -1,7 +1,4 @@
-package com.zenika.survivalbackend.domain.userstory;
-
-import com.zenika.survivalbackend.domain.Event;
-import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
+package com.zenika.survivalbackend.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -31,7 +28,7 @@ public class UserStory {
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }
 
-    public void processWorkflowRuleConstraints(WorkflowRuleProcessedUserStory event) {
+    public void applyWorkflowRuleAck(WorkflowRuleProcessedUserStory event) {
         if (event.getOccurredOn().before(this.lastStatusUpdate))
             return;
 

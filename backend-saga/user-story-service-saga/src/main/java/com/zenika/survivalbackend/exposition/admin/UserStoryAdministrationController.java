@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.exposition.admin;
 
-import com.zenika.survivalbackend.domain.userstory.UserStory;
-import com.zenika.survivalbackend.infrastructure.repository.UserStoryDao;
+import com.zenika.survivalbackend.domain.UserStory;
+import com.zenika.survivalbackend.infrastructure.UserStoryDao;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 

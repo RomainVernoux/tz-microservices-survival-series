@@ -1,4 +1,4 @@
-package com.zenika.survivalbackend.domain.userstory;
+package com.zenika.survivalbackend.domain;
 
 import java.util.List;
 import java.util.UUID;

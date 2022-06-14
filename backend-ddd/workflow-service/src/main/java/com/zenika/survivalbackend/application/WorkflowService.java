@@ -25,10 +25,10 @@ public class WorkflowService {
     public void validateUserStoryTransition(UUID projectId, UUID userStoryId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
         List<WorkflowRule> workflowRules = workflowRuleRepository.findAllByProjectId(projectId);
         try {
-            for (WorkflowRule workflowRule : workflowRules) {
+            workflowRules.forEach(workflowRule -> {
                 workflowRule.userStoryTransitions(oldStatus, newStatus);
                 workflowRuleRepository.save(workflowRule);
-            }
+            });
         } catch (RejectedUserStoryTransitionException e) {
             // FIXME: Oh god.
             logger.error(e.getMessage());

@@ -1,12 +1,6 @@
 package com.zenika.survivalbackend.application;
 
-import com.zenika.survivalbackend.domain.Event;
-import com.zenika.survivalbackend.domain.EventBus;
-import com.zenika.survivalbackend.domain.EventHandler;
-import com.zenika.survivalbackend.domain.userstory.UserStory;
-import com.zenika.survivalbackend.domain.userstory.UserStoryRepository;
-import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
-import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
+import com.zenika.survivalbackend.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -49,7 +43,7 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
     @Transactional(propagation = Propagation.REQUIRED)
     public void handle(WorkflowRuleProcessedUserStory event) {
         UserStory userStory = userStoryRepository.find(event.getUserStoryId());
-        userStory.processWorkflowRuleConstraints(event);
+        userStory.applyWorkflowRuleAck(event);
         userStoryRepository.save(userStory);
     }
 }

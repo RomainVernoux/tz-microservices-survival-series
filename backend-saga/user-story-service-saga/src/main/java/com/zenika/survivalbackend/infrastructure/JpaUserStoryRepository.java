@@ -1,7 +1,7 @@
-package com.zenika.survivalbackend.infrastructure.repository;
+package com.zenika.survivalbackend.infrastructure;
 
-import com.zenika.survivalbackend.domain.userstory.UserStory;
-import com.zenika.survivalbackend.domain.userstory.UserStoryRepository;
+import com.zenika.survivalbackend.domain.UserStory;
+import com.zenika.survivalbackend.domain.UserStoryRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

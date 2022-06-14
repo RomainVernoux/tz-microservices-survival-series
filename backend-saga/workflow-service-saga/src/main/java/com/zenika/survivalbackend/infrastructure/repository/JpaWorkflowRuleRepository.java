@@ -1,10 +1,10 @@
 package com.zenika.survivalbackend.infrastructure.repository;
 
-import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
-import com.zenika.survivalbackend.domain.workflow.WorkflowRule;
-import com.zenika.survivalbackend.domain.workflow.WorkflowRuleRepository;
+import com.zenika.survivalbackend.domain.WorkflowRule;
+import com.zenika.survivalbackend.domain.WorkflowRuleRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,8 +16,8 @@ public class JpaWorkflowRuleRepository implements WorkflowRuleRepository {
     }
 
     @Override
-    public WorkflowRule findFirstByProjectIdAndUserStoryStatus(UUID projectId, UserStoryStatus userStoryStatus) {
-        return workflowRuleDao.findFirstByProjectIdAndUserStoryStatus(projectId, userStoryStatus);
+    public List<WorkflowRule> findAllByProjectId(UUID projectId) {
+        return workflowRuleDao.findAllByProjectId(projectId);
     }
 
     @Override

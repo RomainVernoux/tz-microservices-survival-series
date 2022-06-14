@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface WorkflowRuleDAO extends JpaRepository<WorkflowRule, UUID> {
+public interface WorkflowRuleDao extends JpaRepository<WorkflowRule, UUID> {
 
     List<WorkflowRule> findAllByProjectId(UUID projectId);
 }

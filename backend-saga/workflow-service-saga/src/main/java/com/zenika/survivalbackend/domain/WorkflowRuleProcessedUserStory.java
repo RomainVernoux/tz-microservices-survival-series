@@ -1,7 +1,4 @@
-package com.zenika.survivalbackend.domain.workflow;
-
-import com.zenika.survivalbackend.domain.Event;
-import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
+package com.zenika.survivalbackend.domain;
 
 import java.util.UUID;
 
@@ -11,6 +8,14 @@ public class WorkflowRuleProcessedUserStory extends Event {
     private UserStoryStatus status;
 
     private boolean accepted;
+
+    public WorkflowRuleProcessedUserStory(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus status, boolean accepted) {
+        super(id);
+        this.userStoryId = userStoryId;
+        this.projectId = projectId;
+        this.status = status;
+        this.accepted = accepted;
+    }
 
     public UUID getUserStoryId() {
         return userStoryId;

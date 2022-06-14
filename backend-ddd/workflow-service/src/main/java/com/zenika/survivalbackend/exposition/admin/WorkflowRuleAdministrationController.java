@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.exposition.admin;
 
 import com.zenika.survivalbackend.domain.WorkflowRule;
-import com.zenika.survivalbackend.infrastructure.WorkflowRuleDAO;
+import com.zenika.survivalbackend.infrastructure.WorkflowRuleDao;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class WorkflowRuleAdministrationController {
 
-    private WorkflowRuleDAO workflowRuleRepository;
+    private WorkflowRuleDao workflowRuleRepository;
 
-    public WorkflowRuleAdministrationController(WorkflowRuleDAO workflowRuleRepository) {
+    public WorkflowRuleAdministrationController(WorkflowRuleDao workflowRuleRepository) {
         this.workflowRuleRepository = workflowRuleRepository;
     }
 

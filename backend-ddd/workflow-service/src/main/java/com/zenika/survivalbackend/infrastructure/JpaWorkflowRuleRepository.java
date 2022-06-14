@@ -8,21 +8,21 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public class JPAWorkflowRuleRepository implements WorkflowRuleRepository {
+public class JpaWorkflowRuleRepository implements WorkflowRuleRepository {
 
-    private final WorkflowRuleDAO workflowRuleDAO;
+    private final WorkflowRuleDao workflowRuleDao;
 
-    public JPAWorkflowRuleRepository(WorkflowRuleDAO workflowRuleDAO) {
-        this.workflowRuleDAO = workflowRuleDAO;
+    public JpaWorkflowRuleRepository(WorkflowRuleDao workflowRuleDao) {
+        this.workflowRuleDao = workflowRuleDao;
     }
 
     @Override
     public List<WorkflowRule> findAllByProjectId(UUID projectId) {
-        return workflowRuleDAO.findAllByProjectId(projectId);
+        return workflowRuleDao.findAllByProjectId(projectId);
     }
 
     @Override
     public void save(WorkflowRule workflowRule) {
-        workflowRuleDAO.save(workflowRule);
+        workflowRuleDao.save(workflowRule);
     }
 }
