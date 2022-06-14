@@ -32,18 +32,14 @@ public class EventBusJpa implements EventBus {
     }
 
     @Override
-    public void emitAll(List<Event> events) {
-        events.stream().forEach(
-                event -> {
-                    try {
-                        Activity activity = new Activity(UUID.randomUUID(), event.getId(),
-                                ActivityDirection.OUTBOUND, objectMapper.writeValueAsString(event));
-                        activityRepository.save(activity);
-                    } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-        );
+    public void emit(Event event) {
+        try {
+            Activity activity = new Activity(UUID.randomUUID(), event.getId(),
+                    ActivityDirection.OUTBOUND, objectMapper.writeValueAsString(event));
+            activityRepository.save(activity);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

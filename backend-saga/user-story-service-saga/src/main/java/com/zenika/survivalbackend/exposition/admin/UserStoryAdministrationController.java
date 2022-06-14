@@ -1,7 +1,7 @@
-package com.zenika.survivalbackend.exposition;
+package com.zenika.survivalbackend.exposition.admin;
 
 import com.zenika.survivalbackend.domain.userstory.UserStory;
-import com.zenika.survivalbackend.infrastructure.repository.UserStoryRepositoryJpa;
+import com.zenika.survivalbackend.infrastructure.repository.UserStoryDao;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class UserStoryAdministrationController {
 
-    private UserStoryRepositoryJpa userStoryRepositoryJpa;
+    private UserStoryDao userStoryDao;
 
-    public UserStoryAdministrationController(UserStoryRepositoryJpa userStoryRepositoryJpa) {
-        this.userStoryRepositoryJpa = userStoryRepositoryJpa;
+    public UserStoryAdministrationController(UserStoryDao userStoryDao) {
+        this.userStoryDao = userStoryDao;
     }
 
     @DeleteMapping
     public void deleteAll() {
-        userStoryRepositoryJpa.deleteAll();
+        userStoryDao.deleteAll();
     }
 
     @PostMapping
     public UserStory createUserStory(@RequestBody UserStory userStory) {
-        return userStoryRepositoryJpa.save(userStory);
+        return userStoryDao.save(userStory);
     }
 
 }

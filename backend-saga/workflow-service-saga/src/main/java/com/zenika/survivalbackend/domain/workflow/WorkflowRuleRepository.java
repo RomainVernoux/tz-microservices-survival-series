@@ -8,5 +8,5 @@ public interface WorkflowRuleRepository {
 
     WorkflowRule findFirstByProjectIdAndUserStoryStatus(UUID projectId, UserStoryStatus userStoryStatus);
 
-    WorkflowRule save(WorkflowRule workflowRule);
+    void save(WorkflowRule workflowRule);
 }

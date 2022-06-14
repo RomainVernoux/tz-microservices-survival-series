@@ -15,24 +15,18 @@ import java.util.UUID;
 public class UserStory {
     @Id
     private UUID id;
-
     private UUID projectId;
-
     private String title;
-
     private String description;
-    private Boolean changingStatus = Boolean.FALSE;
-
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
-
+    private Boolean changingStatus = Boolean.FALSE;
     private Date lastStatusUpdate = new Date();
 
 
     public List<Event> changeStatus(UserStoryStatus status) {
         if (this.changingStatus)
             throw new IllegalStateException("The user story is already in the process of changing its status");
-
         this.changingStatus = true;
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }

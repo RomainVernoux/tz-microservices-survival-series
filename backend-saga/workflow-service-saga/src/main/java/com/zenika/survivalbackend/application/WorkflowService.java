@@ -42,7 +42,7 @@ public class WorkflowService implements EventHandler<UserStoryChangeStatusSchedu
                 workflowRuleRepository.findFirstByProjectIdAndUserStoryStatus(event.getProjectId(), event.getNewStatus());
 
         List<Event> events = newWorkflowRule.acceptUserStory(event.getUserStoryId(), removeWorkflowRule);
-        eventBus.emitAll(events);
+        events.forEach(eventBus::emit);
 
         workflowRuleRepository.save(newWorkflowRule);
         workflowRuleRepository.save(removeWorkflowRule);

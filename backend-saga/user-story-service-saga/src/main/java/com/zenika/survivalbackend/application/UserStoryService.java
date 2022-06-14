@@ -7,8 +7,6 @@ import com.zenika.survivalbackend.domain.userstory.UserStory;
 import com.zenika.survivalbackend.domain.userstory.UserStoryRepository;
 import com.zenika.survivalbackend.domain.userstory.UserStoryStatus;
 import com.zenika.survivalbackend.domain.workflow.WorkflowRuleProcessedUserStory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -20,8 +18,6 @@ import java.util.UUID;
 
 @Service
 public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserStory> {
-
-    Logger logger = LoggerFactory.getLogger(UserStoryService.class);
 
     private final UserStoryRepository userStoryRepository;
     private final EventBus eventBus;
@@ -43,18 +39,16 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void changeUserStoryStatus(UUID id, UserStoryStatus status) {
-        UserStory userStory = userStoryRepository.findById(id).get();
-
+        UserStory userStory = userStoryRepository.find(id);
         List<Event> events = userStory.changeStatus(status);
-        eventBus.emitAll(events);
-
         userStoryRepository.save(userStory);
+        events.forEach(eventBus::emit);
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
     public void handle(WorkflowRuleProcessedUserStory event) {
-        UserStory userStory = userStoryRepository.findById(event.getUserStoryId()).get();
+        UserStory userStory = userStoryRepository.find(event.getUserStoryId());
         userStory.processWorkflowRuleConstraints(event);
         userStoryRepository.save(userStory);
 
