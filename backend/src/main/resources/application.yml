@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/postgres
+    password: acomplexpassword
+  sql:
+    init:
+      mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: '8081'

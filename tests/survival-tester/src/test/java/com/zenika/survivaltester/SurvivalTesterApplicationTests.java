@@ -29,8 +29,8 @@ public class SurvivalTesterApplicationTests {
     TestRestTemplate testRestTemplate = new TestRestTemplate();
     ObjectMapper jsonMapper = new ObjectMapper();
 
-    private final static String userStoriesUrl = "http://localhost:8080/user-stories";
-    private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
+    private final static String userStoriesUrl = "http://localhost:8081/user-stories";
+    private final static String workflowRulesUrl = "http://localhost:8081/workflow-rules";
 
 
     @BeforeEach
