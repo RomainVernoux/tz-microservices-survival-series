@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitEventBus implements EventBus {
 
-    @Value("${spring.rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.userStory-exchange}")
     private String exchange;
 
     @Value("${spring.rabbitmq.routingKey}")
