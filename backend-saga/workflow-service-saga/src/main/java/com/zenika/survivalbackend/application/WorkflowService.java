@@ -36,6 +36,7 @@ public class WorkflowService implements EventHandler<UserStoryChangeStatusSchedu
             List<Event> events = workflowRule.userStoryTransitions(
                     event.getUserStoryId(), event.getOldStatus(), event.getNewStatus());
             events.forEach(eventBus::emit);
+            logger.info("User story transition for us {} is {}", event.getUserStoryId(), events);
             workflowRuleRepository.save(workflowRule);
         });
     }
