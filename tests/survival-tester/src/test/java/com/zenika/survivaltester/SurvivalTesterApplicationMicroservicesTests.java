@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,13 +22,13 @@ import java.util.stream.IntStream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-public class SurvivalTesterApplicationTests {
+public class SurvivalTesterApplicationMicroservicesTests {
 
     TestRestTemplate testRestTemplate = new TestRestTemplate();
     ObjectMapper jsonMapper = new ObjectMapper();
 
-    private final static String userStoriesUrl = "http://localhost:8080/user-stories";
-    private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
+    private final static String userStoriesUrl = "http://localhost:8091/user-stories";
+    private final static String workflowRulesUrl = "http://localhost:8092/workflow-rules";
 
 
     @BeforeEach
@@ -41,7 +43,7 @@ public class SurvivalTesterApplicationTests {
         UUID userStoryId = UUID.randomUUID();
         createUserStory(userStoryId, projectId, "US1", "Desc1", "TODO");
 
-        changeUserStoryStatus(userStoryId, projectId, "US1", "Desc2", "IN_PROGRESS");
+        changeUserStoryStatus(userStoryId, "IN_PROGRESS");
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.get(0).get("userStoryStatus").asText()).isEqualTo("IN_PROGRESS");
@@ -58,8 +60,8 @@ public class SurvivalTesterApplicationTests {
         createUserStory(userStory1Id, projectId, "US1", "Desc1", "TODO");
         createUserStory(userStory2Id, projectId, "US2", "Desc2", "TODO");
 
-        changeUserStoryStatus(userStory1Id, projectId, "US1", "Desc1", "IN_PROGRESS");
-        changeUserStoryStatus(userStory2Id, projectId, "US2", "Desc2", "IN_PROGRESS");
+        changeUserStoryStatus(userStory1Id, "IN_PROGRESS");
+        changeUserStoryStatus(userStory2Id, "IN_PROGRESS");
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
@@ -88,7 +90,7 @@ public class SurvivalTesterApplicationTests {
         // WHEN
         List<Callable<Void>> tasks = IntStream.range(0, wipLimit + 1)
                 .<Callable<Void>>mapToObj(i -> () -> {
-                    changeUserStoryStatus(userStoryIds.get(i), projectId, "", "", "IN_PROGRESS");
+                    changeUserStoryStatus(userStoryIds.get(i), "IN_PROGRESS");
                     return null;
                 })
                 .collect(Collectors.toList());
@@ -111,7 +113,8 @@ public class SurvivalTesterApplicationTests {
                     "userStoryStatus": "%s"
                 }
                 """.formatted(userStoryId, projectId, title, description, status), ObjectNode.class);
-        testRestTemplate.postForObject(userStoriesUrl, body, Void.class);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(userStoriesUrl, body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private void createWipWorkflowRule(UUID workflowRuleId, UUID projectId, int wipLimit) throws JsonProcessingException {
@@ -123,20 +126,19 @@ public class SurvivalTesterApplicationTests {
                     "maxNumberOfUserStories": "%d"
                 }
                 """.formatted(workflowRuleId, projectId, "IN_PROGRESS", wipLimit), ObjectNode.class);
-        testRestTemplate.postForObject(workflowRulesUrl, body, Void.class);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(workflowRulesUrl, body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    private void changeUserStoryStatus(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
+    private void changeUserStoryStatus(UUID userStoryId, String newStatus) throws JsonProcessingException {
         ObjectNode body = jsonMapper.readValue("""
                 {
-                    "id": "%s",
-                    "projectId": "%s",
-                    "title": "%s",
-                    "description": "%s",
-                    "userStoryStatus": "%s"
+                    "newStatus": "%s"
                 }
-                """.formatted(userStoryId, projectId, title, description, newStatus), ObjectNode.class);
+                """.formatted(newStatus), ObjectNode.class);
         testRestTemplate.put(userStoriesUrl, body);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(userStoriesUrl + "/" + userStoryId + "/change-status", body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private void deleteAllUserStories() {
