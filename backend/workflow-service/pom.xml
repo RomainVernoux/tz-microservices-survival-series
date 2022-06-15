@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zenika</groupId>
-    <artifactId>user-story-service-ddd</artifactId>
+    <artifactId>workflow-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-story-service-ddd</name>
-    <description>User Story Service</description>
+    <name>workflow-service</name>
+    <description>Workflow Service</description>
     <properties>
         <java.version>18</java.version>
     </properties>
@@ -25,10 +25,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>

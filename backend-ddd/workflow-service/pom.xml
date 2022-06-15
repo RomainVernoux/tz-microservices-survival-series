@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zenika</groupId>
-    <artifactId>workflow-service</artifactId>
+    <artifactId>workflow-service-ddd</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>workflow-service</name>
+    <name>workflow-service-ddd</name>
     <description>Workflow Service</description>
     <properties>
         <java.version>18</java.version>

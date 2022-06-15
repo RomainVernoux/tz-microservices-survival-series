@@ -11,8 +11,8 @@
     <groupId>com.zenika</groupId>
     <artifactId>user-story-service-mono</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>user-story-service-mono</name>
-    <description>user-story-service-mono</description>
+    <name>user-story-service</name>
+    <description>user-story-service</description>
     <properties>
         <java.version>18</java.version>
     </properties>
