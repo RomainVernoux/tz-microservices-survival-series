@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.zenika</groupId>
-    <artifactId>user-story-service-mono</artifactId>
+    <artifactId>user-story-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>user-story-service</name>
     <description>user-story-service</description>

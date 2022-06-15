@@ -6,10 +6,10 @@ import org.springframework.retry.annotation.EnableRetry;
 
 @SpringBootApplication
 @EnableRetry
-public class UserStoryServiceMonoApplication {
+public class UserStoryServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(UserStoryServiceMonoApplication.class, args);
+        SpringApplication.run(UserStoryServiceApplication.class, args);
     }
 
 }
