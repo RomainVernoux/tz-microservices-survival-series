@@ -11,6 +11,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -19,7 +20,9 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 
 @SpringBootTest
 public class SurvivalTesterApplicationMicroservicesTests {
@@ -48,7 +51,10 @@ public class SurvivalTesterApplicationMicroservicesTests {
         createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
         changeUserStoryStatus(userStoryId, "IN_PROGRESS");
 
-        Thread.sleep(1000);
+        await().atMost(5, SECONDS).until(() -> {
+            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+            return stories.get(0).get("userStoryStatus").asText().equals("IN_PROGRESS");
+        });
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.get(0).get("userStoryStatus").asText()).isEqualTo("IN_PROGRESS");
@@ -68,7 +74,12 @@ public class SurvivalTesterApplicationMicroservicesTests {
         changeUserStoryStatus(userStory1Id, "IN_PROGRESS");
         changeUserStoryStatus(userStory2Id, "IN_PROGRESS");
 
-        Thread.sleep(1000);
+        await().atMost(5, SECONDS).until(() -> {
+            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+            List<String> values = Arrays.asList(stories.get(0).get("userStoryStatus").asText(),
+                    stories.get(1).get("userStoryStatus").asText());
+            return values.contains("IN_PROGRESS");
+        });
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
@@ -103,8 +114,13 @@ public class SurvivalTesterApplicationMicroservicesTests {
                 .collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
-        Thread.sleep(1000);
-        
+        await().atMost(5, SECONDS).until(() -> {
+            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+            List<String> values =
+                    Arrays.asList(0, 1, 2, 3).stream().map(i -> stories.get(i).get("userStoryStatus").asText()).toList();
+            return values.stream().filter(s -> s.equals("IN_PROGRESS")).count() >= 3;
+        });
+
         // THEN
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
