@@ -10,4 +10,5 @@ public class SurvivalTesterApplication {
         SpringApplication.run(SurvivalTesterApplication.class, args);
     }
 
+
 }
