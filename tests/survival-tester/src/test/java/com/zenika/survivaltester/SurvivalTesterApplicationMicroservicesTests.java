@@ -38,19 +38,24 @@ public class SurvivalTesterApplicationMicroservicesTests {
     }
 
     @Test
-    public void should_change_user_story_status() throws JsonProcessingException {
+    public void should_change_user_story_status() throws JsonProcessingException, InterruptedException {
         UUID projectId = UUID.randomUUID();
         UUID userStoryId = UUID.randomUUID();
+        UUID workflowRuleId = UUID.randomUUID();
         createUserStory(userStoryId, projectId, "US1", "Desc1", "TODO");
 
+        int wipLimit = 0;
+        createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
         changeUserStoryStatus(userStoryId, "IN_PROGRESS");
+
+        Thread.sleep(1000);
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.get(0).get("userStoryStatus").asText()).isEqualTo("IN_PROGRESS");
     }
 
     @Test
-    public void should_respect_wip_limit() throws JsonProcessingException {
+    public void should_respect_wip_limit() throws JsonProcessingException, InterruptedException {
         UUID projectId = UUID.randomUUID();
         UUID userStory1Id = UUID.randomUUID();
         UUID userStory2Id = UUID.randomUUID();
@@ -62,6 +67,8 @@ public class SurvivalTesterApplicationMicroservicesTests {
 
         changeUserStoryStatus(userStory1Id, "IN_PROGRESS");
         changeUserStoryStatus(userStory2Id, "IN_PROGRESS");
+
+        Thread.sleep(1000);
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
@@ -96,6 +103,8 @@ public class SurvivalTesterApplicationMicroservicesTests {
                 .collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
+        Thread.sleep(1000);
+        
         // THEN
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
