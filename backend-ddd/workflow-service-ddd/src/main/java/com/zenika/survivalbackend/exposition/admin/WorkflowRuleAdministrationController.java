@@ -1,7 +1,7 @@
 package com.zenika.survivalbackend.exposition.admin;
 
 import com.zenika.survivalbackend.domain.WorkflowRule;
-import com.zenika.survivalbackend.infrastructure.WorkflowRuleDao;
+import com.zenika.survivalbackend.infrastructure.JpaWorkflowRuleDao;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class WorkflowRuleAdministrationController {
 
-    private WorkflowRuleDao workflowRuleDao;
+    private JpaWorkflowRuleDao jpaWorkflowRuleDao;
 
-    public WorkflowRuleAdministrationController(WorkflowRuleDao workflowRuleDao) {
-        this.workflowRuleDao = workflowRuleDao;
+    public WorkflowRuleAdministrationController(JpaWorkflowRuleDao jpaWorkflowRuleDao) {
+        this.jpaWorkflowRuleDao = jpaWorkflowRuleDao;
     }
 
     @DeleteMapping
     public void deleteAll() {
-        workflowRuleDao.deleteAll();
+        jpaWorkflowRuleDao.deleteAll();
     }
 
     @PostMapping
     public WorkflowRule saveWorkflowRule(@RequestBody WorkflowRule workflowRule) {
-        return workflowRuleDao.save(workflowRule);
+        return jpaWorkflowRuleDao.save(workflowRule);
     }
 
 }

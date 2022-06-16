@@ -10,19 +10,19 @@ import java.util.UUID;
 @Repository
 public class JpaWorkflowRuleRepository implements WorkflowRuleRepository {
 
-    private final WorkflowRuleDao workflowRuleDao;
+    private final JpaWorkflowRuleDao jpaWorkflowRuleDao;
 
-    public JpaWorkflowRuleRepository(WorkflowRuleDao workflowRuleDao) {
-        this.workflowRuleDao = workflowRuleDao;
+    public JpaWorkflowRuleRepository(JpaWorkflowRuleDao jpaWorkflowRuleDao) {
+        this.jpaWorkflowRuleDao = jpaWorkflowRuleDao;
     }
 
     @Override
     public List<WorkflowRule> findAllByProjectId(UUID projectId) {
-        return workflowRuleDao.findAllByProjectId(projectId);
+        return jpaWorkflowRuleDao.findAllByProjectId(projectId);
     }
 
     @Override
     public void save(WorkflowRule workflowRule) {
-        workflowRuleDao.save(workflowRule);
+        jpaWorkflowRuleDao.save(workflowRule);
     }
 }
