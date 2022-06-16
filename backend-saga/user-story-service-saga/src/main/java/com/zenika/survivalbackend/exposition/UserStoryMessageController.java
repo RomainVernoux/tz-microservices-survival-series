@@ -1,20 +1,28 @@
 package com.zenika.survivalbackend.exposition;
 
-import com.zenika.survivalbackend.domain.WorkflowRuleProcessedUserStory;
-import com.zenika.survivalbackend.infrastructure.bus.JpaEventBus;
+import com.zenika.survivalbackend.application.UserStoryService;
+import com.zenika.survivalbackend.infrastructure.bus.TransactionalEventBus;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserStoryMessageController {
-    JpaEventBus jpaEventBus;
+    TransactionalEventBus transactionalEventBus;
+    UserStoryService userStoryService;
 
-    public UserStoryMessageController(JpaEventBus jpaEventBus) {
-        this.jpaEventBus = jpaEventBus;
+    public UserStoryMessageController(TransactionalEventBus transactionalEventBus, UserStoryService userStoryService) {
+        this.transactionalEventBus = transactionalEventBus;
+        this.userStoryService = userStoryService;
     }
 
     @RabbitListener(queues = "${spring.rabbitmq.userStory-queue}")
-    public void receivedMessage(WorkflowRuleProcessedUserStory event) {
-        jpaEventBus.receiveEvent(event);
+    public void receivedMessage(WorkflowRuleProcessedUserStory workflowRuleProcessedUserStoryEvent) {
+        transactionalEventBus.onEvent(workflowRuleProcessedUserStoryEvent, event ->
+                userStoryService.validateUserStoryStatus(
+                        event.getUserStoryId(),
+                        event.getStatus(),
+                        event.isAccepted(),
+                        event.getOccurredOn()
+                ));
     }
 }

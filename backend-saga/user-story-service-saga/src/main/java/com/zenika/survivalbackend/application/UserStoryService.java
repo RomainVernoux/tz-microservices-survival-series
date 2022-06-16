@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Service
-public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserStory> {
+public class UserStoryService {
 
     private final UserStoryRepository userStoryRepository;
     private final EventBus eventBus;
@@ -20,11 +20,6 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
                             EventBus eventBus) {
         this.userStoryRepository = userStoryRepository;
         this.eventBus = eventBus;
-    }
-
-    @PostConstruct
-    public void subscribeToUserStoriesStatusChanges() {
-        this.eventBus.subscribe(WorkflowRuleProcessedUserStory.class, this);
     }
 
     public List<UserStory> getAllUserStories() {
@@ -40,11 +35,10 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
         events.forEach(eventBus::emit);
     }
 
-    @Override
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
-    public void handle(WorkflowRuleProcessedUserStory event) {
-        UserStory userStory = userStoryRepository.find(event.getUserStoryId());
-        userStory.confirmUpdateStatus(event.isAccepted(), event.getStatus(), event.getOccurredOn());
+    public void validateUserStoryStatus(UUID userStoryId, UserStoryStatus newStatus, boolean isAccepted, Date newStatusDate) {
+        UserStory userStory = userStoryRepository.find(userStoryId);
+        userStory.confirmUpdateStatus(isAccepted, newStatus, newStatusDate);
         userStoryRepository.save(userStory);
 
     }

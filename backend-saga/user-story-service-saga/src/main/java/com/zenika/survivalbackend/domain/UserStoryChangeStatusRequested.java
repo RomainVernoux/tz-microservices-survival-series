@@ -2,14 +2,14 @@ package com.zenika.survivalbackend.domain;
 
 import java.util.UUID;
 
-public class UserStoryChangeStatusScheduled extends Event {
+public class UserStoryChangeStatusRequested extends Event {
 
     private UUID userStoryId;
     private UUID projectId;
     private UserStoryStatus oldStatus;
     private UserStoryStatus newStatus;
 
-    public UserStoryChangeStatusScheduled(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
+    public UserStoryChangeStatusRequested(UUID id, UUID userStoryId, UUID projectId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
         super(id);
         this.projectId = projectId;
         this.userStoryId = userStoryId;

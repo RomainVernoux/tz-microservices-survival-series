@@ -4,31 +4,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zenika.survivalbackend.domain.Event;
 import com.zenika.survivalbackend.domain.EventBus;
-import com.zenika.survivalbackend.domain.EventHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 @Component
-public class JpaEventBus implements EventBus {
+public class TransactionalEventBus implements EventBus {
 
 
     private ObjectMapper objectMapper;
     private ActivityRepository activityRepository;
-    private final Map<Class<? extends Event>, Set<EventHandler>> subscribers = new HashMap<>();
 
-    public JpaEventBus(ObjectMapper objectMapper,
-                       ActivityRepository activityRepository) {
+    public TransactionalEventBus(ObjectMapper objectMapper,
+                                 ActivityRepository activityRepository) {
         this.objectMapper = objectMapper;
         this.activityRepository = activityRepository;
-    }
-
-    @Override
-    public <T extends Event> void subscribe(Class<T> eventClass, EventHandler<T> eventHandler) {
-        subscribers.computeIfAbsent(eventClass, key -> new HashSet<>()).add(eventHandler);
     }
 
     @Override
@@ -43,20 +38,18 @@ public class JpaEventBus implements EventBus {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void receiveInboundEvent(Event event) {
+    public <T extends Event> void onEvent(T event, Consumer<T> consumer) {
         if (activityRepository.existsByEventId(event.getId()))
             return;
 
         try {
-            subscribers.getOrDefault(event.getClass(), Collections.emptySet()).forEach(
-                    handler -> handler.handle(event)
-            );
-
             Activity activity = new Activity(UUID.randomUUID(), event.getId(),
                     ActivityDirection.INBOUND, objectMapper.writeValueAsString(event));
             activity.setHandledDate(LocalDateTime.now());
             activity.setHandled(true);
             activityRepository.save(activity);
+
+            consumer.accept(event);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

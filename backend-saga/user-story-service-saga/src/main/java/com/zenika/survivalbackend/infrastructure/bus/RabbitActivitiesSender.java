@@ -10,9 +10,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Component
-public class RabbitManager {
+public class RabbitActivitiesSender {
 
-    JpaEventBus jpaEventBus;
+    TransactionalEventBus transactionalEventBus;
     RabbitTemplate rabbitTemplate;
 
     @Value("${spring.rabbitmq.workflow-exchange}")
@@ -21,17 +21,17 @@ public class RabbitManager {
     @Value("${spring.rabbitmq.routingKey}")
     private String routingKey;
 
-    public RabbitManager(JpaEventBus jpaEventBus, RabbitTemplate rabbitTemplate) {
-        this.jpaEventBus = jpaEventBus;
+    public RabbitActivitiesSender(TransactionalEventBus transactionalEventBus, RabbitTemplate rabbitTemplate) {
+        this.transactionalEventBus = transactionalEventBus;
         this.rabbitTemplate = rabbitTemplate;
     }
 
     public void handlePendingActivities() {
-        List<Activity> activities = jpaEventBus.getPendingOutboundActivities();
+        List<Activity> activities = transactionalEventBus.getPendingOutboundActivities();
         activities.forEach(activity -> {
             Message message = MessageBuilder.withBody(activity.getBody().getBytes(StandardCharsets.UTF_8)).build();
             rabbitTemplate.send(exchange, routingKey, message);
-            jpaEventBus.markAsHandled(activity);
+            transactionalEventBus.markAsHandled(activity);
         });
     }
 }

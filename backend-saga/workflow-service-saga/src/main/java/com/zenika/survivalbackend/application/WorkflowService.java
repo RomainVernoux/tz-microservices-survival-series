@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.UUID;
 
 @Service
-public class WorkflowService implements EventHandler<UserStoryChangeStatusScheduled> {
+public class WorkflowService {
 
     Logger logger = LoggerFactory.getLogger(WorkflowService.class);
 
@@ -23,20 +23,15 @@ public class WorkflowService implements EventHandler<UserStoryChangeStatusSchedu
         this.eventBus = eventBus;
     }
 
-    @PostConstruct
-    public void subscribeToUserStoriesStatusChanges() {
-        this.eventBus.subscribe(UserStoryChangeStatusScheduled.class, this);
-    }
 
-    @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void handle(UserStoryChangeStatusScheduled event) {
-        List<WorkflowRule> workflowRules = workflowRuleRepository.findAllByProjectId(event.getProjectId());
+    public void validateUserStoryTransition(UUID projectId, UUID userStoryId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
+        List<WorkflowRule> workflowRules = workflowRuleRepository.findAllByProjectId(projectId);
         workflowRules.forEach(workflowRule -> {
             List<Event> events = workflowRule.userStoryTransitions(
-                    event.getUserStoryId(), event.getOldStatus(), event.getNewStatus());
+                    userStoryId, oldStatus, newStatus);
             events.forEach(eventBus::emit);
-            logger.info("User story transition for us {} is {}", event.getUserStoryId(), events);
+            logger.info("User story transition for us {} is {}", userStoryId, events);
             workflowRuleRepository.save(workflowRule);
         });
     }

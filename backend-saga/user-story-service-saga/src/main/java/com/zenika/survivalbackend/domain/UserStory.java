@@ -27,7 +27,7 @@ public class UserStory {
             throw new IllegalStateException("User story is already being updated");
 
         this.updatingStatus = true;
-        return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
+        return List.of(new UserStoryChangeStatusRequested(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }
 
     public void confirmUpdateStatus(boolean accepted, UserStoryStatus status, Date occurredOn) {
