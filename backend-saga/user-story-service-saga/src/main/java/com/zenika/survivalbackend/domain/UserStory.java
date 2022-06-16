@@ -23,6 +23,9 @@ public class UserStory {
     private Date lastStatusUpdate = new Date();
 
     public List<Event> changeStatus(UserStoryStatus status) {
+        if (this.updatingStatus)
+            throw new IllegalStateException("User story is already being updated");
+
         this.updatingStatus = true;
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }

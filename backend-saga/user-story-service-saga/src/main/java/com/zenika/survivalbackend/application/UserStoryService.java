@@ -34,14 +34,9 @@ public class UserStoryService implements EventHandler<WorkflowRuleProcessedUserS
 
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void changeUserStoryStatus(UUID userStoryId, UserStoryStatus status) {
-
         UserStory userStory = userStoryRepository.find(userStoryId);
-        if (userStory.isUpdatingStatus())
-            throw new IllegalStateException("User story is already being updated");
-
         List<Event> events = userStory.changeStatus(status);
         userStoryRepository.save(userStory);
-
         events.forEach(eventBus::emit);
     }
 
