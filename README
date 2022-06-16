@@ -18,7 +18,8 @@ Intro
     updateWorkflowRuleOnTransitionFrom/To
 2. Anemic model
     remove setters / add constructor for 2 objects => doesn't compile
-    state-changing methods on model
+    state-changing methods on model : userStoryTransitions
+    inline all then refactor
     bonus : constructor to initiate state
     we want to do the same for UserStory, but this requires changing the API
 3. Hexagonal architecture
