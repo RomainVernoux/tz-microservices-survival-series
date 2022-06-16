@@ -51,7 +51,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
         createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
         changeUserStoryStatus(userStoryId, "IN_PROGRESS");
 
-        await().atMost(5, SECONDS).until(() -> {
+        await().atLeast(1, SECONDS).atMost(5, SECONDS).until(() -> {
             ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
             return stories.get(0).get("userStoryStatus").asText().equals("IN_PROGRESS");
         });
@@ -74,7 +74,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
         changeUserStoryStatus(userStory1Id, "IN_PROGRESS");
         changeUserStoryStatus(userStory2Id, "IN_PROGRESS");
 
-        await().atMost(5, SECONDS).until(() -> {
+        await().atLeast(1, SECONDS).atMost(5, SECONDS).until(() -> {
             ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
             List<String> values = Arrays.asList(stories.get(0).get("userStoryStatus").asText(),
                     stories.get(1).get("userStoryStatus").asText());
@@ -114,7 +114,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
                 .collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
-        await().atMost(5, SECONDS).until(() -> {
+        await().atLeast(1, SECONDS).atMost(5, SECONDS).until(() -> {
             ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
             List<String> values =
                     Arrays.asList(0, 1, 2, 3).stream().map(i -> stories.get(i).get("userStoryStatus").asText()).toList();

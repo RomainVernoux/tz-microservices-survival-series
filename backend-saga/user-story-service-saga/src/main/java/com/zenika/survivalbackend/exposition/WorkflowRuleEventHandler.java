@@ -6,11 +6,11 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserStoryMessageController {
+public class WorkflowRuleEventHandler {
     TransactionalEventBus transactionalEventBus;
     UserStoryService userStoryService;
 
-    public UserStoryMessageController(TransactionalEventBus transactionalEventBus, UserStoryService userStoryService) {
+    public WorkflowRuleEventHandler(TransactionalEventBus transactionalEventBus, UserStoryService userStoryService) {
         this.transactionalEventBus = transactionalEventBus;
         this.userStoryService = userStoryService;
     }
