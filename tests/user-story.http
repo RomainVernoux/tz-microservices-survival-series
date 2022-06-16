@@ -1,5 +1,5 @@
 ### CREATE
-POST http://localhost:8092/workflow-rules
+POST http://localhost:8082/workflow-rules
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ DELETE http://localhost:8091/user-stories
 
 
 ### CREATE
-POST http://localhost:8091/user-stories
+POST http://localhost:8081/user-stories
 Content-Type: application/json
 
 {
@@ -29,7 +29,7 @@ Content-Type: application/json
     "userStoryStatus": "TODO"
 }
 ### UPDATE
-POST http://localhost:8091/user-stories/7ecd47c4-892d-4493-afe1-ffc4a838cb15/change-status
+POST http://localhost:8081/user-stories/7ecd47c4-892d-4493-afe1-ffc4a838cb15/change-status
 Content-Type: application/json
 
 {
