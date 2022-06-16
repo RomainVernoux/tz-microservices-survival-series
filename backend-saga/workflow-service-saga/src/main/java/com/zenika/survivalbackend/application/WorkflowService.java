@@ -13,7 +13,7 @@ import java.util.UUID;
 @Service
 public class WorkflowService {
 
-    Logger logger = LoggerFactory.getLogger(WorkflowService.class);
+    private static final Logger logger = LoggerFactory.getLogger(WorkflowService.class);
 
     private final WorkflowRuleRepository workflowRuleRepository;
     private final EventBus eventBus;

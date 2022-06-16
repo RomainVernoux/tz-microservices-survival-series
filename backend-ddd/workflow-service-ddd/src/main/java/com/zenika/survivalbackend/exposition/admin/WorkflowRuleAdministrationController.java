@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class WorkflowRuleAdministrationController {
 
-    private JpaWorkflowRuleDao jpaWorkflowRuleDao;
+    private final JpaWorkflowRuleDao jpaWorkflowRuleDao;
 
     public WorkflowRuleAdministrationController(JpaWorkflowRuleDao jpaWorkflowRuleDao) {
         this.jpaWorkflowRuleDao = jpaWorkflowRuleDao;

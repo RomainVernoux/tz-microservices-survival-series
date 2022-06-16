@@ -1,7 +1,6 @@
 package com.zenika.survivalbackend.exposition;
 
 import com.zenika.survivalbackend.application.WorkflowService;
-import com.zenika.survivalbackend.domain.UserStoryStatusChangedEvent;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 

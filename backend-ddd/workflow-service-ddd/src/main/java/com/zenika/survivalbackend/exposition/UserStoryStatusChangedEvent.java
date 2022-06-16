@@ -1,10 +1,14 @@
-package com.zenika.survivalbackend.domain;
+package com.zenika.survivalbackend.exposition;
+
+import com.zenika.survivalbackend.domain.Event;
+import com.zenika.survivalbackend.domain.UserStoryStatus;
 
 import java.util.UUID;
 
-public class UserStoryStatusChangedEvent {
-    private final UUID projectId;
+public class UserStoryStatusChangedEvent extends Event {
+
     private final UUID userStoryId;
+    private final UUID projectId;
     private final UserStoryStatus oldStatus;
     private final UserStoryStatus newStatus;
 
