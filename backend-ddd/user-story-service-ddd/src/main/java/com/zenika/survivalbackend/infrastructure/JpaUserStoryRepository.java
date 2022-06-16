@@ -10,24 +10,24 @@ import java.util.UUID;
 @Repository
 public class JpaUserStoryRepository implements UserStoryRepository {
 
-    private final JpaUserStoryDao jpaUserStoryDAO;
+    private final JpaUserStoryDao jpaUserStoryDao;
 
-    public JpaUserStoryRepository(JpaUserStoryDao jpaUserStoryDAO) {
-        this.jpaUserStoryDAO = jpaUserStoryDAO;
+    public JpaUserStoryRepository(JpaUserStoryDao jpaUserStoryDao) {
+        this.jpaUserStoryDao = jpaUserStoryDao;
     }
 
     @Override
     public List<UserStory> findAll() {
-        return jpaUserStoryDAO.findAll();
+        return jpaUserStoryDao.findAll();
     }
 
     @Override
     public UserStory find(UUID id) {
-        return jpaUserStoryDAO.getReferenceById(id);
+        return jpaUserStoryDao.getReferenceById(id);
     }
 
     @Override
     public void save(UserStory userStory) {
-        jpaUserStoryDAO.save(userStory);
+        jpaUserStoryDao.save(userStory);
     }
 }

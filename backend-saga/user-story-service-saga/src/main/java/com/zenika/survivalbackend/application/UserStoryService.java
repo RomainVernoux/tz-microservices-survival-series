@@ -16,8 +16,7 @@ public class UserStoryService {
     private final UserStoryRepository userStoryRepository;
     private final EventBus eventBus;
 
-    public UserStoryService(UserStoryRepository userStoryRepository,
-                            EventBus eventBus) {
+    public UserStoryService(UserStoryRepository userStoryRepository, EventBus eventBus) {
         this.userStoryRepository = userStoryRepository;
         this.eventBus = eventBus;
     }

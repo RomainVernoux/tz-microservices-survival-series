@@ -9,7 +9,8 @@ import java.util.UUID;
 
 @Repository
 public class JpaUserStoryRepository implements UserStoryRepository {
-    JpaUserStoryDao jpaUserStoryDao;
+
+    private final JpaUserStoryDao jpaUserStoryDao;
 
     public JpaUserStoryRepository(JpaUserStoryDao jpaUserStoryDao) {
         this.jpaUserStoryDao = jpaUserStoryDao;
