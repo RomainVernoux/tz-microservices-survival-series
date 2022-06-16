@@ -11,7 +11,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -51,10 +50,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
         createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
         changeUserStoryStatus(userStoryId, "IN_PROGRESS");
 
-        await().atMost(5, SECONDS).until(() -> {
-            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
-            return stories.get(0).get("userStoryStatus").asText().equals("IN_PROGRESS");
-        });
+        waitForUserStoriesStable();
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.get(0).get("userStoryStatus").asText()).isEqualTo("IN_PROGRESS");
@@ -74,11 +70,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
         changeUserStoryStatus(userStory1Id, "IN_PROGRESS");
         changeUserStoryStatus(userStory2Id, "IN_PROGRESS");
 
-        await().atMost(5, SECONDS).until(() -> {
-            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
-            System.out.println(stories.findValuesAsText("updatingStatusFrom"));
-            return stories.findValuesAsText("updatingStatusFrom").equals(List.of("null", "null"));
-        });
+        waitForUserStoriesStable();
 
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
         assertThat(stories.findValuesAsText("userStoryStatus"))
@@ -113,12 +105,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
                 .collect(Collectors.toList());
         executorService.invokeAll(tasks);
 
-        await().atMost(5, SECONDS).until(() -> {
-            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
-            List<String> values =
-                    Arrays.asList(0, 1, 2, 3).stream().map(i -> stories.get(i).get("userStoryStatus").asText()).toList();
-            return values.stream().filter(s -> s.equals("IN_PROGRESS")).count() >= 3;
-        });
+        waitForUserStoriesStable();
 
         // THEN
         ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
@@ -171,5 +158,12 @@ public class SurvivalTesterApplicationMicroservicesTests {
 
     private void deleteAllUserWorkflowRules() {
         testRestTemplate.delete(workflowRulesUrl);
+    }
+
+    private void waitForUserStoriesStable() {
+        await().atMost(5, SECONDS).until(() -> {
+            ArrayNode stories = testRestTemplate.getForObject(userStoriesUrl, ArrayNode.class);
+            return stories.findValuesAsText("updatingStatusFrom").stream().allMatch(s -> s.equals("null"));
+        });
     }
 }
