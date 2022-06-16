@@ -17,12 +17,12 @@ public class WorkflowRule {
     protected WorkflowRule() {
     }
 
-    public void userStoryTransitions(UserStoryStatus oldStatus, UserStoryStatus newStatus) throws RejectedUserStoryTransitionException {
+    public void userStoryTransitions(UserStoryStatus oldStatus, UserStoryStatus newStatus) {
         if (oldStatus == userStoryStatus) {
             currentNumberOfUserStories--;
         } else if (newStatus == userStoryStatus) {
             if (maxNumberOfUserStories > 0 && currentNumberOfUserStories >= maxNumberOfUserStories)
-                throw new RejectedUserStoryTransitionException("The maximum number of stories in status has been reached");
+                throw new IllegalArgumentException("The maximum number of stories in status has been reached");
             currentNumberOfUserStories++;
         }
     }

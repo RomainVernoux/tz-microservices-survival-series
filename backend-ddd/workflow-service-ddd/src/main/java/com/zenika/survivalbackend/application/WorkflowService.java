@@ -1,6 +1,5 @@
 package com.zenika.survivalbackend.application;
 
-import com.zenika.survivalbackend.domain.RejectedUserStoryTransitionException;
 import com.zenika.survivalbackend.domain.UserStoryStatus;
 import com.zenika.survivalbackend.domain.WorkflowRule;
 import com.zenika.survivalbackend.domain.WorkflowRuleRepository;
@@ -29,7 +28,7 @@ public class WorkflowService {
                 workflowRule.userStoryTransitions(oldStatus, newStatus);
                 workflowRuleRepository.save(workflowRule);
             });
-        } catch (RejectedUserStoryTransitionException e) {
+        } catch (IllegalArgumentException e) {
             // FIXME: Oh god.
             logger.error(e.getMessage());
         }
