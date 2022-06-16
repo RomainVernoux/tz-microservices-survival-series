@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: test
   datasource:
     username: postgres
     url: jdbc:postgresql://localhost:15432/postgres
@@ -9,7 +11,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
   rabbitmq:
     host: localhost
     port: 15672
