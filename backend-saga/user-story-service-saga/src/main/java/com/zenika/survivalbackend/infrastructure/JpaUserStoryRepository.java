@@ -9,24 +9,24 @@ import java.util.UUID;
 
 @Repository
 public class JpaUserStoryRepository implements UserStoryRepository {
-    UserStoryDao userStoryDao;
+    JpaUserStoryDao jpaUserStoryDao;
 
-    public JpaUserStoryRepository(UserStoryDao userStoryDao) {
-        this.userStoryDao = userStoryDao;
+    public JpaUserStoryRepository(JpaUserStoryDao jpaUserStoryDao) {
+        this.jpaUserStoryDao = jpaUserStoryDao;
     }
 
     @Override
     public List<UserStory> findAll() {
-        return userStoryDao.findAll();
+        return jpaUserStoryDao.findAll();
     }
 
     @Override
     public UserStory find(UUID id) {
-        return userStoryDao.getReferenceById(id);
+        return jpaUserStoryDao.getReferenceById(id);
     }
 
     @Override
     public void save(UserStory userStory) {
-        userStoryDao.save(userStory);
+        jpaUserStoryDao.save(userStory);
     }
 }
