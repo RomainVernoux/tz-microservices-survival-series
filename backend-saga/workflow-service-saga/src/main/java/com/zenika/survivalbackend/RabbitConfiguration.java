@@ -27,8 +27,7 @@ public class RabbitConfiguration {
 
     @Bean
     Queue queue() {
-        return QueueBuilder.durable(queue).withArgument("x-dead-letter-exchange", "deadLetterExchange")
-                .withArgument("x-dead-letter-routing-key", "deadLetter").build();
+        return new Queue(queue, true);
     }
 
     @Bean
