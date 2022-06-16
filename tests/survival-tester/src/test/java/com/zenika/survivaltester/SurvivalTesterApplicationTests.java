@@ -27,8 +27,8 @@ public class SurvivalTesterApplicationTests {
     TestRestTemplate testRestTemplate = new TestRestTemplate();
     ObjectMapper jsonMapper = new ObjectMapper();
 
-    private final static String userStoriesUrl = "http://localhost:8080/user-stories";
-    private final static String workflowRulesUrl = "http://localhost:8080/workflow-rules";
+    private final static String userStoriesUrl = "http://localhost:8081/user-stories";
+    private final static String workflowRulesUrl = "http://localhost:8082/workflow-rules";
 
 
     @BeforeEach
@@ -133,7 +133,7 @@ public class SurvivalTesterApplicationTests {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
-    private void changeUserStoryStatus(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
+    private void changeUserStoryStatusMono(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
         ObjectNode body = jsonMapper.readValue("""
                 {
                     "id": "%s",
@@ -144,6 +144,16 @@ public class SurvivalTesterApplicationTests {
                 }
                 """.formatted(userStoryId, projectId, title, description, newStatus), ObjectNode.class);
         testRestTemplate.put(userStoriesUrl, body);
+    }
+
+    private void changeUserStoryStatus(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
+        ObjectNode body = jsonMapper.readValue("""
+                {
+                    "newStatus": "%s"
+                }
+                """.formatted(newStatus), ObjectNode.class);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(userStoriesUrl + "/" + userStoryId + "/change-status", body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private void deleteAllUserStories() {
