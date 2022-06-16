@@ -18,23 +18,30 @@ public class UserStory {
     @Enumerated(EnumType.STRING)
     private UserStoryStatus userStoryStatus;
 
-    private boolean updatingStatus;
+    @Enumerated(EnumType.STRING)
+    private UserStoryStatus updatingStatusFrom;
 
-    private Date lastStatusUpdate = new Date();
+    private Date lastUpdate = new Date();
 
     public List<Event> changeStatus(UserStoryStatus status) {
-        if (this.updatingStatus)
+        if (this.updatingStatusFrom != null)
             throw new IllegalStateException("User story is already being updated");
 
-        this.updatingStatus = true;
-        return List.of(new UserStoryChangeStatusRequested(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
+        this.updatingStatusFrom = this.userStoryStatus;
+        this.userStoryStatus = status;
+        return List.of(new UserStoryChangeStatusRequested(UUID.randomUUID(), this.id, this.projectId,
+                this.updatingStatusFrom, status));
     }
 
-    public void confirmUpdateStatus(boolean accepted, UserStoryStatus status, Date occurredOn) {
-        if (accepted && occurredOn.after(this.lastStatusUpdate)) {
-            this.userStoryStatus = status;
-            this.updatingStatus = false;
+    public void confirmUpdateStatus(boolean accepted, Date occurredOn) {
+        if (occurredOn.before(this.lastUpdate))
+            return;
+
+        if (!accepted) {
+            this.userStoryStatus = this.updatingStatusFrom;
         }
+
+        this.updatingStatusFrom = null;
     }
 
     public UUID getId() {
@@ -77,19 +84,19 @@ public class UserStory {
         this.userStoryStatus = userStoryStatus;
     }
 
-    public boolean isUpdatingStatus() {
-        return updatingStatus;
+    public UserStoryStatus getUpdatingStatusFrom() {
+        return updatingStatusFrom;
     }
 
-    public void setUpdatingStatus(boolean updatingStatus) {
-        this.updatingStatus = updatingStatus;
+    public void setUpdatingStatusFrom(UserStoryStatus updatingStatusFrom) {
+        this.updatingStatusFrom = updatingStatusFrom;
     }
 
-    public Date getLastStatusUpdate() {
-        return lastStatusUpdate;
+    public Date getLastUpdate() {
+        return lastUpdate;
     }
 
-    public void setLastStatusUpdate(Date lastStatusUpdate) {
-        this.lastStatusUpdate = lastStatusUpdate;
+    public void setLastUpdate(Date lastUpdate) {
+        this.lastUpdate = lastUpdate;
     }
 }

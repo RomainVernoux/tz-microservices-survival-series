@@ -36,9 +36,9 @@ public class UserStoryService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
-    public void validateUserStoryStatus(UUID userStoryId, UserStoryStatus newStatus, boolean isAccepted, Date newStatusDate) {
+    public void validateUserStoryStatus(UUID userStoryId, boolean isAccepted, Date newStatusDate) {
         UserStory userStory = userStoryRepository.find(userStoryId);
-        userStory.confirmUpdateStatus(isAccepted, newStatus, newStatusDate);
+        userStory.confirmUpdateStatus(isAccepted, newStatusDate);
         userStoryRepository.save(userStory);
 
     }
