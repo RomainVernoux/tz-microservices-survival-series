@@ -7,31 +7,40 @@ import java.util.UUID;
 
 public class UserStoryStatusChangedEvent extends Event {
 
-    private final UUID userStoryId;
-    private final UUID projectId;
-    private final UserStoryStatus oldStatus;
-    private final UserStoryStatus newStatus;
+    private UUID userStoryId;
+    private UUID projectId;
+    private UserStoryStatus oldStatus;
+    private UserStoryStatus newStatus;
 
-    public UserStoryStatusChangedEvent(UUID projectId, UUID userStoryId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
-        this.projectId = projectId;
+    public UUID getUserStoryId() {
+        return userStoryId;
+    }
+
+    public void setUserStoryId(UUID userStoryId) {
         this.userStoryId = userStoryId;
-        this.oldStatus = oldStatus;
-        this.newStatus = newStatus;
     }
 
     public UUID getProjectId() {
         return projectId;
     }
 
-    public UUID getUserStoryId() {
-        return userStoryId;
+    public void setProjectId(UUID projectId) {
+        this.projectId = projectId;
     }
 
     public UserStoryStatus getOldStatus() {
         return oldStatus;
     }
 
+    public void setOldStatus(UserStoryStatus oldStatus) {
+        this.oldStatus = oldStatus;
+    }
+
     public UserStoryStatus getNewStatus() {
         return newStatus;
+    }
+
+    public void setNewStatus(UserStoryStatus newStatus) {
+        this.newStatus = newStatus;
     }
 }
