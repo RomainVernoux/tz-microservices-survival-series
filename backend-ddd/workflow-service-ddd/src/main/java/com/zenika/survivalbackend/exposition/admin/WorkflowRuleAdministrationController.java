@@ -10,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @Profile("test")
 public class WorkflowRuleAdministrationController {
 
-    private WorkflowRuleDao workflowRuleRepository;
+    private WorkflowRuleDao workflowRuleDao;
 
-    public WorkflowRuleAdministrationController(WorkflowRuleDao workflowRuleRepository) {
-        this.workflowRuleRepository = workflowRuleRepository;
+    public WorkflowRuleAdministrationController(WorkflowRuleDao workflowRuleDao) {
+        this.workflowRuleDao = workflowRuleDao;
     }
 
     @DeleteMapping
     public void deleteAll() {
-        workflowRuleRepository.deleteAll();
+        workflowRuleDao.deleteAll();
     }
 
     @PostMapping
     public WorkflowRule saveWorkflowRule(@RequestBody WorkflowRule workflowRule) {
-        return workflowRuleRepository.save(workflowRule);
+        return workflowRuleDao.save(workflowRule);
     }
 
 }

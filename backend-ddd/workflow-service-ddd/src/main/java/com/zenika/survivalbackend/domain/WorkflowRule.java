@@ -21,7 +21,7 @@ public class WorkflowRule {
         if (oldStatus == userStoryStatus) {
             currentNumberOfUserStories--;
         } else if (newStatus == userStoryStatus) {
-            if (currentNumberOfUserStories >= maxNumberOfUserStories)
+            if (maxNumberOfUserStories > 0 && currentNumberOfUserStories >= maxNumberOfUserStories)
                 throw new RejectedUserStoryTransitionException("The maximum number of stories in status has been reached");
             currentNumberOfUserStories++;
         }

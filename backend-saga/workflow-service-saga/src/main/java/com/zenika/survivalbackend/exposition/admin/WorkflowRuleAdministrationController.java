@@ -23,8 +23,7 @@ public class WorkflowRuleAdministrationController {
 
     @PostMapping
     public WorkflowRule saveWorkflowRule(@RequestBody WorkflowRule workflowRule) {
-        workflowRuleDao.save(workflowRule);
-        return workflowRule;
+        return workflowRuleDao.save(workflowRule);
     }
 
 }

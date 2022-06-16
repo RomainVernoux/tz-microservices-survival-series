@@ -13,14 +13,14 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
-public class EventBusJpa implements EventBus {
+public class JpaEventBus implements EventBus {
 
 
     private ObjectMapper objectMapper;
     private ActivityRepository activityRepository;
     private final Map<Class<? extends Event>, Set<EventHandler>> subscribers = new HashMap<>();
 
-    public EventBusJpa(ObjectMapper objectMapper,
+    public JpaEventBus(ObjectMapper objectMapper,
                        ActivityRepository activityRepository) {
         this.objectMapper = objectMapper;
         this.activityRepository = activityRepository;
@@ -43,7 +43,7 @@ public class EventBusJpa implements EventBus {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void receiveEvent(Event event) {
+    public void receiveInboundEvent(Event event) {
         if (activityRepository.existsByEventId(event.getId()))
             return;
 
