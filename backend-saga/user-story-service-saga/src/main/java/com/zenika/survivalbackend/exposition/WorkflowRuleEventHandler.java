@@ -15,8 +15,8 @@ public class WorkflowRuleEventHandler {
         this.userStoryService = userStoryService;
     }
 
-    @RabbitListener(queues = "${spring.rabbitmq.userStory-queue}")
-    public void receivedMessage(WorkflowRuleProcessedUserStory workflowRuleProcessedUserStoryEvent) throws InterruptedException {
+    @RabbitListener(queues = "${spring.rabbitmq.workflow-queue}")
+    public void receivedMessage(WorkflowRuleProcessedUserStory workflowRuleProcessedUserStoryEvent) {
         transactionalEventBus.onEvent(workflowRuleProcessedUserStoryEvent, event ->
                 userStoryService.validateUserStoryStatus(
                         event.getUserStoryId(),

@@ -15,7 +15,7 @@ public class RabbitActivitiesSender {
     TransactionalEventBus transactionalEventBus;
     RabbitTemplate rabbitTemplate;
 
-    @Value("${spring.rabbitmq.userStory-exchange}")
+    @Value("${spring.rabbitmq.workflow-exchange}")
     private String exchange;
 
     @Value("${spring.rabbitmq.routingKey}")

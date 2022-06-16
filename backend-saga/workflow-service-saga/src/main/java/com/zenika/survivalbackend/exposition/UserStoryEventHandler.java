@@ -16,7 +16,7 @@ public class UserStoryEventHandler {
         this.workflowService = workflowService;
     }
 
-    @RabbitListener(queues = "${spring.rabbitmq.workflow-queue}")
+    @RabbitListener(queues = "${spring.rabbitmq.userStory-queue}")
     public void receivedMessage(UserStoryChangeStatusRequested userStoryChangeStatusRequestedEvent) {
         transactionalEventBus.onEvent(userStoryChangeStatusRequestedEvent, event ->
                 workflowService.validateUserStoryTransition(
