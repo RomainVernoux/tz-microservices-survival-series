@@ -23,12 +23,14 @@ public class UserStory {
     private Date lastStatusUpdate = new Date();
 
     public List<Event> changeStatus(UserStoryStatus status) {
+        this.updatingStatus = true;
         return List.of(new UserStoryChangeStatusScheduled(UUID.randomUUID(), this.id, this.projectId, this.userStoryStatus, status));
     }
 
     public void confirmUpdateStatus(boolean accepted, UserStoryStatus status, Date occurredOn) {
         if (accepted && occurredOn.after(this.lastStatusUpdate)) {
             this.userStoryStatus = status;
+            this.updatingStatus = false;
         }
     }
 

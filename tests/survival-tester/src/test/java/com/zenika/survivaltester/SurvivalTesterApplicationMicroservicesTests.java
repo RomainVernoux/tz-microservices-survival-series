@@ -41,7 +41,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
     }
 
     @Test
-    public void should_change_user_story_status() throws JsonProcessingException, InterruptedException {
+    public void should_change_user_story_status() throws JsonProcessingException {
         UUID projectId = UUID.randomUUID();
         UUID userStoryId = UUID.randomUUID();
         UUID workflowRuleId = UUID.randomUUID();
@@ -61,7 +61,7 @@ public class SurvivalTesterApplicationMicroservicesTests {
     }
 
     @Test
-    public void should_respect_wip_limit() throws JsonProcessingException, InterruptedException {
+    public void should_respect_wip_limit() throws JsonProcessingException {
         UUID projectId = UUID.randomUUID();
         UUID userStory1Id = UUID.randomUUID();
         UUID userStory2Id = UUID.randomUUID();

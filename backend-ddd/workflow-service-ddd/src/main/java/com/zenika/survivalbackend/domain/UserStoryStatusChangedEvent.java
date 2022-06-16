@@ -1,6 +1,4 @@
-package com.zenika.survivalbackend.exposition;
-
-import com.zenika.survivalbackend.domain.UserStoryStatus;
+package com.zenika.survivalbackend.domain;
 
 import java.util.UUID;
 

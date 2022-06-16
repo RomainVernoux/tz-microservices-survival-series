@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.UUID;
@@ -114,7 +116,8 @@ public class SurvivalTesterApplicationTests {
                     "userStoryStatus": "%s"
                 }
                 """.formatted(userStoryId, projectId, title, description, status), ObjectNode.class);
-        testRestTemplate.postForObject(userStoriesUrl, body, Void.class);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(userStoriesUrl, body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private void createWipWorkflowRule(UUID workflowRuleId, UUID projectId, int wipLimit) throws JsonProcessingException {
@@ -126,7 +129,8 @@ public class SurvivalTesterApplicationTests {
                     "maxNumberOfUserStories": "%d"
                 }
                 """.formatted(workflowRuleId, projectId, "IN_PROGRESS", wipLimit), ObjectNode.class);
-        testRestTemplate.postForObject(workflowRulesUrl, body, Void.class);
+        ResponseEntity<Void> response = testRestTemplate.postForEntity(workflowRulesUrl, body, Void.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     private void changeUserStoryStatus(UUID userStoryId, UUID projectId, String title, String description, String newStatus) throws JsonProcessingException {
