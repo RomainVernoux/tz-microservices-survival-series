@@ -43,11 +43,8 @@ public class SurvivalTesterApplicationMicroservicesTests {
     public void should_change_user_story_status() throws JsonProcessingException {
         UUID projectId = UUID.randomUUID();
         UUID userStoryId = UUID.randomUUID();
-        UUID workflowRuleId = UUID.randomUUID();
         createUserStory(userStoryId, projectId, "US1", "Desc1", "TODO");
 
-        int wipLimit = 0;
-        createWipWorkflowRule(workflowRuleId, projectId, wipLimit);
         changeUserStoryStatus(userStoryId, "IN_PROGRESS");
 
         waitForUserStoriesStable();

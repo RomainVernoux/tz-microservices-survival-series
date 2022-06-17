@@ -21,7 +21,7 @@ public class WorkflowRule {
         if (oldStatus == userStoryStatus) {
             currentNumberOfUserStories--;
         } else if (newStatus == userStoryStatus) {
-            if (maxNumberOfUserStories > 0 && currentNumberOfUserStories >= maxNumberOfUserStories)
+            if (currentNumberOfUserStories >= maxNumberOfUserStories)
                 throw new IllegalArgumentException("The maximum number of stories in status has been reached");
             currentNumberOfUserStories++;
         }

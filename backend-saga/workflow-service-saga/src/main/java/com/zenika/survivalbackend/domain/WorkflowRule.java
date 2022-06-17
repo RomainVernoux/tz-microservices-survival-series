@@ -25,7 +25,7 @@ public class WorkflowRule {
         if (oldStatus == userStoryStatus) {
             currentNumberOfUserStories--;
         } else if (newStatus == userStoryStatus) {
-            if (maxNumberOfUserStories > 0 && currentNumberOfUserStories >= maxNumberOfUserStories) {
+            if (currentNumberOfUserStories >= maxNumberOfUserStories) {
                 events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, false));
             } else {
                 events.add(new WorkflowRuleProcessedUserStory(UUID.randomUUID(), userStoryId, this.projectId, this.userStoryStatus, true));
@@ -73,5 +73,14 @@ public class WorkflowRule {
 
     public void setCurrentNumberOfUserStories(int currentNumberOfUserStories) {
         this.currentNumberOfUserStories = currentNumberOfUserStories;
+    }
+
+    public static WorkflowRule defaultRule(UUID projectId, UserStoryStatus status) {
+        WorkflowRule rule = new WorkflowRule();
+        rule.projectId = projectId;
+        rule.currentNumberOfUserStories = 0;
+        rule.maxNumberOfUserStories = Integer.MAX_VALUE;
+        rule.userStoryStatus = status;
+        return rule;
     }
 }
