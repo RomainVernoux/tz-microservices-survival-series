@@ -12,6 +12,10 @@ spring:
     hibernate:
       ddl-auto: create
   rabbitmq:
+    listener:
+      direct:
+        default-requeue-rejected: false
+      type: direct
     host: localhost
     port: 15672
     username: guest
