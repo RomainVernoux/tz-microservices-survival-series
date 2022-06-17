@@ -39,6 +39,8 @@ public class UserStory {
 
         if (!accepted) {
             this.userStoryStatus = this.updatingStatusFrom;
+        } else {
+            lastUpdate = occurredOn;
         }
 
         this.updatingStatusFrom = null;
