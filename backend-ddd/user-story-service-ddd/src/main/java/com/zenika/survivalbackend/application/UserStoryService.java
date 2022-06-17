@@ -2,6 +2,9 @@ package com.zenika.survivalbackend.application;
 
 import com.zenika.survivalbackend.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,6 +24,7 @@ public class UserStoryService {
         return userStoryRepository.findAll();
     }
 
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ)
     public void changeUserStoryStatus(UUID id, UserStoryStatus newStatus) {
         UserStory userStory = userStoryRepository.find(id);
         List<Event> events = userStory.changeStatus(newStatus);
