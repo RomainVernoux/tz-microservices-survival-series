@@ -28,7 +28,7 @@ public class WorkflowService {
     public void validateUserStoryTransition(UUID projectId, UUID userStoryId, UserStoryStatus oldStatus, UserStoryStatus newStatus) {
         List<WorkflowRule> workflowRules = workflowRuleRepository.findAllByProjectId(projectId);
         if (workflowRules.size() == 0) {
-            workflowRules = List.of(WorkflowRule.defaultRule(projectId, newStatus));
+            workflowRules = List.of(WorkflowRule.allowingAllTransitions(projectId, newStatus));
         }
 
         workflowRules.forEach(workflowRule -> {

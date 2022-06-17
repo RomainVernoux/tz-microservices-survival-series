@@ -43,8 +43,7 @@ public class UserStoryService {
         nextRule.ifPresent(workflowRule -> {
             var currentCount = workflowRule.getCurrentNumberOfUserStories();
 
-            if (workflowRule.getMaxNumberOfUserStories() > 0 &&
-                    currentCount >= workflowRule.getMaxNumberOfUserStories())
+            if (currentCount >= workflowRule.getMaxNumberOfUserStories())
                 throw new IllegalArgumentException("The maximum number of stories in status has been reached");
 
             workflowRule.setCurrentNumberOfUserStories(currentCount + 1);

@@ -75,7 +75,7 @@ public class WorkflowRule {
         this.currentNumberOfUserStories = currentNumberOfUserStories;
     }
 
-    public static WorkflowRule defaultRule(UUID projectId, UserStoryStatus status) {
+    public static WorkflowRule allowingAllTransitions(UUID projectId, UserStoryStatus status) {
         WorkflowRule rule = new WorkflowRule();
         rule.projectId = projectId;
         rule.currentNumberOfUserStories = 0;
